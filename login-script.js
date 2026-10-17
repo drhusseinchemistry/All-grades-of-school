@@ -38,5 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'داخل ببە';
         }
     });
+
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', async () => {
+            googleLoginBtn.disabled = true;
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+
+                if (user) {
+                    if (window.isSuperAdmin && window.isSuperAdmin(user)) {
+                        localStorage.setItem('is_admin_mode_active', 'true');
+                    }
+                    const status = await checkUserStatus(user);
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                console.error('Google Sign-In Error:', err);
+                if (loginError) {
+                    loginError.textContent = 'کێشەیەک لە چوونەژوورەوە بە گووگڵ چێبوو: ' + (err.message || '');
+                    loginError.style.display = 'block';
+                }
+            } finally {
+                googleLoginBtn.disabled = false;
+            }
+        });
+    }
 });
 // --- END OF FILE: login-script.js ---

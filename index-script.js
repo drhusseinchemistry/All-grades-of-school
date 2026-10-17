@@ -445,10 +445,140 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 7. ADMIN FAST AUTH MODAL
     // ==========================================
-    fastAdminAuthBtn.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-        activateSuperAdminMode();
-    });
+    if (fastAdminAuthBtn) {
+        fastAdminAuthBtn.addEventListener('click', () => {
+            if (loginModal) loginModal.style.display = 'none';
+            activateSuperAdminMode();
+        });
+    }
+
+    // ==========================================
+    // 8. GOOGLE REGISTRATION & AUTH CONTROLLER
+    // ==========================================
+    const googleAuthModal = document.getElementById('google-auth-welcome-modal');
+    const modalGoogleSigninBtn = document.getElementById('modal-google-signin-btn');
+    const modalExploreGuestBtn = document.getElementById('modal-explore-guest-btn');
+    const topUserAuthBadge = document.getElementById('top-user-auth-badge');
+    const topUserAvatar = document.getElementById('top-user-avatar');
+    const topUserIcon = document.getElementById('top-user-icon');
+    const topUserName = document.getElementById('top-user-name');
+    const btnTopGoogleLogin = document.getElementById('btn-top-google-login');
+    const btnTopSignout = document.getElementById('btn-top-signout');
+
+    async function handleGoogleLogin() {
+        try {
+            if (modalGoogleSigninBtn) modalGoogleSigninBtn.disabled = true;
+            if (btnTopGoogleLogin) btnTopGoogleLogin.disabled = true;
+
+            let user = null;
+            if (window.GoogleDriveService) {
+                const res = await window.GoogleDriveService.signInWithGoogle();
+                user = res.user;
+            } else if (typeof firebase !== 'undefined' && firebase.auth) {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const res = await firebase.auth().signInWithPopup(provider);
+                user = res.user;
+            }
+
+            if (user) {
+                if (window.isSuperAdmin && window.isSuperAdmin(user)) {
+                    localStorage.setItem('is_admin_mode_active', 'true');
+                    dataStore.setUserRole('super_admin');
+                }
+                if (googleAuthModal) googleAuthModal.style.display = 'none';
+                sessionStorage.removeItem('guest_explored');
+                updateAuthDisplay(user);
+                updateRoleUI();
+                alert(`بەخێربێیت ${user.displayName || user.email}! خۆتۆمارکردن بە هەژماری Google بە سەرکەوتوویی ئەنجامدرا.`);
+            }
+        } catch (err) {
+            console.error("Google Auth error:", err);
+            alert("چوونەژوورەوەی گووگڵ تەواو نەبوو: " + (err.message || ''));
+        } finally {
+            if (modalGoogleSigninBtn) modalGoogleSigninBtn.disabled = false;
+            if (btnTopGoogleLogin) btnTopGoogleLogin.disabled = false;
+        }
+    }
+
+    async function handleSignOut() {
+        const confirmed = confirm('ئایا دڵنیایت دەتەوێت دەرچیت؟ (تسجیل خروج)');
+        if (!confirmed) return;
+
+        try {
+            if (window.GoogleDriveService) {
+                await window.GoogleDriveService.signOut();
+            }
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                await firebase.auth().signOut();
+            }
+            localStorage.removeItem('is_admin_mode_active');
+            dataStore.setUserRole('student');
+            updateAuthDisplay(null);
+            updateRoleUI();
+            alert('بە سەرکەوتوویی دەرچوویت (تسجیل خروج کرا).');
+        } catch (err) {
+            console.error("Sign out error:", err);
+        }
+    }
+
+    function updateAuthDisplay(user) {
+        if (user) {
+            if (topUserAuthBadge) topUserAuthBadge.style.display = 'inline-flex';
+            if (topUserName) topUserName.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر');
+            if (user.photoURL && topUserAvatar) {
+                topUserAvatar.src = user.photoURL;
+                topUserAvatar.style.display = 'block';
+                if (topUserIcon) topUserIcon.style.display = 'none';
+            } else {
+                if (topUserAvatar) topUserAvatar.style.display = 'none';
+                if (topUserIcon) topUserIcon.style.display = 'block';
+            }
+            if (btnTopGoogleLogin) btnTopGoogleLogin.style.display = 'none';
+            if (btnTopSignout) btnTopSignout.style.display = 'inline-flex';
+        } else {
+            if (topUserAuthBadge) topUserAuthBadge.style.display = 'none';
+            if (btnTopGoogleLogin) btnTopGoogleLogin.style.display = 'inline-flex';
+            if (btnTopSignout) btnTopSignout.style.display = 'none';
+        }
+    }
+
+    if (modalGoogleSigninBtn) {
+        modalGoogleSigninBtn.addEventListener('click', handleGoogleLogin);
+    }
+    if (btnTopGoogleLogin) {
+        btnTopGoogleLogin.addEventListener('click', () => {
+            if (googleAuthModal) googleAuthModal.style.display = 'flex';
+            else handleGoogleLogin();
+        });
+    }
+    if (btnTopSignout) {
+        btnTopSignout.addEventListener('click', handleSignOut);
+    }
+    if (modalExploreGuestBtn) {
+        modalExploreGuestBtn.addEventListener('click', () => {
+            if (googleAuthModal) googleAuthModal.style.display = 'none';
+            sessionStorage.setItem('guest_explored', 'true');
+        });
+    }
+
+    // Subscribe to Firebase Auth
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged((user) => {
+            updateAuthDisplay(user);
+            if (user) {
+                if (window.isSuperAdmin && window.isSuperAdmin(user)) {
+                    localStorage.setItem('is_admin_mode_active', 'true');
+                }
+                updateRoleUI();
+                if (googleAuthModal) googleAuthModal.style.display = 'none';
+            } else {
+                const guestExplored = sessionStorage.getItem('guest_explored');
+                if (!guestExplored && googleAuthModal) {
+                    googleAuthModal.style.display = 'flex';
+                }
+            }
+        });
+    }
 
     // Language Change Listener from global
     window.addEventListener('languageChanged', (e) => {

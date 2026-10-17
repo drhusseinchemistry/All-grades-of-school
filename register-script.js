@@ -56,5 +56,45 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'تۆمار بکە';
         }
     });
+
+    const googleRegBtn = document.getElementById('google-register-btn');
+    if (googleRegBtn) {
+        googleRegBtn.addEventListener('click', async () => {
+            googleRegBtn.disabled = true;
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+
+                if (user) {
+                    if (window.isSuperAdmin && window.isSuperAdmin(user)) {
+                        localStorage.setItem('is_admin_mode_active', 'true');
+                    }
+                    // Sync profile to Firestore users collection
+                    try {
+                        await db.collection('users').doc(user.uid).set({
+                            fullName: user.displayName || 'بەکارهێنەری گووگڵ',
+                            email: user.email,
+                            phoneNumber: user.phoneNumber || '',
+                            isSubscribed: true,
+                            isAdmin: window.isSuperAdmin ? window.isSuperAdmin(user) : false,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                    } catch (e) {
+                        console.warn('Firestore user profile sync:', e);
+                    }
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                console.error('Google Register Error:', err);
+                if (registerError) {
+                    registerError.textContent = 'کێشەیەک لە تۆمارکردن بە گووگڵ چێبوو: ' + (err.message || '');
+                    registerError.style.display = 'block';
+                }
+            } finally {
+                googleRegBtn.disabled = false;
+            }
+        });
+    }
 });
 // --- END OF FILE: register-script.js ---
