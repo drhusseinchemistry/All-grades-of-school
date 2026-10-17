@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "User profile containing role and grade preferences",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "User full name",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address",
+          "maxLength": 150
+        },
+        "role": {
+          "type": "string",
+          "enum": ["student", "teacher", "super_admin"],
+          "description": "User access role"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["displayName", "email", "role"]
+    },
+    "studyMaterials": {
+      "title": "StudyMaterial",
+      "description": "Educational study material published for students",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Material title",
+          "maxLength": 200
+        },
+        "type": {
+          "type": "string",
+          "enum": ["doc", "presentation", "quiz", "video", "pdf"],
+          "description": "Type of study material"
+        },
+        "gradeId": {
+          "type": "string",
+          "description": "Target grade ID",
+          "maxLength": 20
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Author UID",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["title", "type", "gradeId", "authorId"]
+    },
+    "admins": {
+      "title": "Admin",
+      "description": "Super admin registry",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Admin email",
+          "maxLength": 150
+        },
+        "role": {
+          "type": "string",
+          "enum": ["super_admin"],
+          "description": "Admin role"
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "users",
+      "description": "User profile collection"
+    },
+    "/studyMaterials/{materialId}": {
+      "schema": "studyMaterials",
+      "description": "Educational study materials"
+    },
+    "/admins/{adminId}": {
+      "schema": "admins",
+      "description": "Platform administrators"
+    }
+  }
+}

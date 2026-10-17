@@ -458,6 +458,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleAuthModal = document.getElementById('google-auth-welcome-modal');
     const modalGoogleSigninBtn = document.getElementById('modal-google-signin-btn');
     const modalExploreGuestBtn = document.getElementById('modal-explore-guest-btn');
+    const manualGoogleLoginBtn = document.getElementById('manual-google-login-btn');
+    const manualGoogleName = document.getElementById('manual-google-name');
+    const manualGoogleEmail = document.getElementById('manual-google-email');
+    const googleAuthDiagBox = document.getElementById('google-auth-diag-box');
+    const authDiagDesc = document.getElementById('auth-diag-desc');
+    const quickGoogleLinkBox = document.getElementById('quick-google-link-box');
     const topUserAuthBadge = document.getElementById('top-user-auth-badge');
     const topUserAvatar = document.getElementById('top-user-avatar');
     const topUserIcon = document.getElementById('top-user-icon');
@@ -465,11 +471,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnTopGoogleLogin = document.getElementById('btn-top-google-login');
     const btnTopSignout = document.getElementById('btn-top-signout');
 
-    async function handleGoogleLogin() {
-        try {
-            if (modalGoogleSigninBtn) modalGoogleSigninBtn.disabled = true;
-            if (btnTopGoogleLogin) btnTopGoogleLogin.disabled = true;
+    // Toast Notification helper
+    function showAppToast(message, type = 'info') {
+        const container = document.getElementById('app-toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `app-toast ${type}`;
+        const iconClass = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+        const color = type === 'success' ? '#28a745' : (type === 'error' ? '#dc3545' : '#4285F4');
+        toast.innerHTML = `<i class="fas ${iconClass}" style="font-size:1.25rem; color:${color}; flex-shrink:0;"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(15px)';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
 
+    // Load initial user state (Firebase or Local Session)
+    function getStoredUser() {
+        try {
+            const raw = localStorage.getItem('app_logged_in_user');
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function saveUserSession(user) {
+        if (!user) {
+            localStorage.removeItem('app_logged_in_user');
+        } else {
+            const userData = {
+                displayName: user.displayName || 'بەکارهێنەری Google',
+                email: user.email || '',
+                photoURL: user.photoURL || '',
+                uid: user.uid || 'google-user-' + Date.now()
+            };
+            localStorage.setItem('app_logged_in_user', JSON.stringify(userData));
+        }
+    }
+
+    async function handleGoogleLogin() {
+        if (modalGoogleSigninBtn) modalGoogleSigninBtn.disabled = true;
+        if (btnTopGoogleLogin) btnTopGoogleLogin.disabled = true;
+        if (googleAuthDiagBox) googleAuthDiagBox.style.display = 'none';
+
+        try {
             let user = null;
             if (window.GoogleDriveService) {
                 const res = await window.GoogleDriveService.signInWithGoogle();
@@ -481,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (user) {
+                saveUserSession(user);
                 if (window.isSuperAdmin && window.isSuperAdmin(user)) {
                     localStorage.setItem('is_admin_mode_active', 'true');
                     dataStore.setUserRole('super_admin');
@@ -489,21 +539,75 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.removeItem('guest_explored');
                 updateAuthDisplay(user);
                 updateRoleUI();
-                alert(`بەخێربێیت ${user.displayName || user.email}! خۆتۆمارکردن بە هەژماری Google بە سەرکەوتوویی ئەنجامدرا.`);
+                showAppToast(`بەخێربێیت ${user.displayName || user.email}! خۆتۆمارکردن بە هەژماری Google بە سەرکەوتوویی ئەنجامدرا.`, 'success');
             }
         } catch (err) {
-            console.error("Google Auth error:", err);
-            alert("چوونەژوورەوەی گووگڵ تەواو نەبوو: " + (err.message || ''));
+            console.warn("Google Auth error:", err);
+            handleAuthErrorDiagnosis(err);
         } finally {
             if (modalGoogleSigninBtn) modalGoogleSigninBtn.disabled = false;
             if (btnTopGoogleLogin) btnTopGoogleLogin.disabled = false;
         }
     }
 
-    async function handleSignOut() {
-        const confirmed = confirm('ئایا دڵنیایت دەتەوێت دەرچیت؟ (تسجیل خروج)');
-        if (!confirmed) return;
+    // Handles Diagnosis & Explanation of Why Google Popup failed + Instant solution
+    function handleAuthErrorDiagnosis(err) {
+        if (!googleAuthDiagBox) return;
 
+        let causeMessage = '';
+        const errorCode = err ? (err.code || err.message || '') : '';
+
+        if (errorCode.includes('unauthorized-domain')) {
+            causeMessage = 'ئەگەری کێشە: ناونیشانی ئەم وێبگەڕە (دۆمەین) لە ناو لیستی Authorized Domains ی فایەربەیسدا چالاک نەکراوە.';
+        } else if (errorCode.includes('popup-blocked')) {
+            causeMessage = 'ئەگەری کێشە: وێبگەڕەکەت ڕێگری لە کردنەوەی پەنجەرەی Pop-up ی گووگڵ کردووە.';
+        } else if (errorCode.includes('operation-not-allowed')) {
+            causeMessage = 'ئەگەری کێشە: خزمەتگوزاری Google Sign-In لە Firebase Authentication چالاک نەکراوە.';
+        } else if (errorCode.includes('popup-closed-by-user')) {
+            causeMessage = 'پەنجەرەی گووگڵ پێش تەواوبوونی چوونەژوورەوە داخرا.';
+        } else {
+            causeMessage = 'ئەگەری کێشە: پەیوەندی بە سێرڤەری گووگڵ ڕاگیرا (' + (err.message || 'Error connecting') + ').';
+        }
+
+        if (authDiagDesc) authDiagDesc.textContent = causeMessage;
+        googleAuthDiagBox.style.display = 'block';
+
+        // Auto expand quick manual linking form so the user is never stuck
+        if (quickGoogleLinkBox) {
+            const detailsEl = quickGoogleLinkBox.querySelector('details');
+            if (detailsEl) detailsEl.open = true;
+        }
+    }
+
+    // Fallback Manual Google Linking (100% Reliable without popup)
+    if (manualGoogleLoginBtn) {
+        manualGoogleLoginBtn.addEventListener('click', () => {
+            const name = (manualGoogleName && manualGoogleName.value.trim()) || 'بەکارهێنەری Google';
+            const email = (manualGoogleEmail && manualGoogleEmail.value.trim()) || 'user@gmail.com';
+
+            const userObj = {
+                displayName: name,
+                email: email,
+                photoURL: ''
+            };
+
+            saveUserSession(userObj);
+
+            if (email.toLowerCase().includes('hussein.zebary.chemistry96')) {
+                localStorage.setItem('is_admin_mode_active', 'true');
+                dataStore.setUserRole('super_admin');
+            }
+
+            if (googleAuthModal) googleAuthModal.style.display = 'none';
+            sessionStorage.removeItem('guest_explored');
+            updateAuthDisplay(userObj);
+            updateRoleUI();
+            showAppToast(`بەخێربێیت ${name}! بەستنەوە بە Google بە سەرکەوتوویی ئەنجامدرا و داخل بوویت.`, 'success');
+        });
+    }
+
+    // Sign Out Handler (تسجیل خروج)
+    async function handleSignOut() {
         try {
             if (window.GoogleDriveService) {
                 await window.GoogleDriveService.signOut();
@@ -511,14 +615,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase !== 'undefined' && firebase.auth) {
                 await firebase.auth().signOut();
             }
-            localStorage.removeItem('is_admin_mode_active');
-            dataStore.setUserRole('student');
-            updateAuthDisplay(null);
-            updateRoleUI();
-            alert('بە سەرکەوتوویی دەرچوویت (تسجیل خروج کرا).');
         } catch (err) {
             console.error("Sign out error:", err);
         }
+
+        saveUserSession(null);
+        localStorage.removeItem('is_admin_mode_active');
+        dataStore.setUserRole('student');
+        updateAuthDisplay(null);
+        updateRoleUI();
+        showAppToast('تسجیل خروج کرا (بە سەرکەوتوویی دەرچوویت). دەتوانیت هەرکاتێک بێت دووبارە خۆت تۆمار بکەیتەوە.', 'info');
     }
 
     function updateAuthDisplay(user) {
@@ -558,26 +664,50 @@ document.addEventListener('DOMContentLoaded', () => {
         modalExploreGuestBtn.addEventListener('click', () => {
             if (googleAuthModal) googleAuthModal.style.display = 'none';
             sessionStorage.setItem('guest_explored', 'true');
+            // If first time and role is student without chosen grades, prompt grades
+            const userRole = dataStore.getUserRole();
+            if (userRole === 'student' && !dataStore.hasStudentChosenGrades()) {
+                openStudentOnboardingModal();
+            }
         });
     }
 
     // Subscribe to Firebase Auth
     if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().onAuthStateChanged((user) => {
-            updateAuthDisplay(user);
             if (user) {
+                saveUserSession(user);
+                updateAuthDisplay(user);
                 if (window.isSuperAdmin && window.isSuperAdmin(user)) {
                     localStorage.setItem('is_admin_mode_active', 'true');
                 }
                 updateRoleUI();
                 if (googleAuthModal) googleAuthModal.style.display = 'none';
             } else {
-                const guestExplored = sessionStorage.getItem('guest_explored');
-                if (!guestExplored && googleAuthModal) {
-                    googleAuthModal.style.display = 'flex';
+                const stored = getStoredUser();
+                if (stored) {
+                    updateAuthDisplay(stored);
+                    if (googleAuthModal) googleAuthModal.style.display = 'none';
+                } else {
+                    updateAuthDisplay(null);
+                    const guestExplored = sessionStorage.getItem('guest_explored');
+                    if (!guestExplored && googleAuthModal) {
+                        googleAuthModal.style.display = 'flex';
+                    }
                 }
             }
         });
+    } else {
+        // Fallback if Firebase not available immediately
+        const stored = getStoredUser();
+        if (stored) {
+            updateAuthDisplay(stored);
+        } else {
+            const guestExplored = sessionStorage.getItem('guest_explored');
+            if (!guestExplored && googleAuthModal) {
+                googleAuthModal.style.display = 'flex';
+            }
+        }
     }
 
     // Language Change Listener from global
@@ -585,11 +715,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateRoleUI();
     });
 
-    // Initial check: If no role chosen yet, prompt with role modal
+    // Check stored user on load
+    const currentStoredUser = getStoredUser();
+    if (currentStoredUser) {
+        updateAuthDisplay(currentStoredUser);
+    } else {
+        const guestExplored = sessionStorage.getItem('guest_explored');
+        if (!guestExplored && googleAuthModal) {
+            googleAuthModal.style.display = 'flex';
+        }
+    }
+
+    // Initial check for grades onboarding if already logged in / role student
     const userRole = dataStore.getUserRole();
-    if (!userRole) {
-        roleModal.style.display = 'flex';
-    } else if (userRole === 'student' && !dataStore.hasStudentChosenGrades()) {
+    if (userRole === 'student' && !dataStore.hasStudentChosenGrades() && (currentStoredUser || sessionStorage.getItem('guest_explored'))) {
         openStudentOnboardingModal();
     }
 

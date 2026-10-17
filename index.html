@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قۆناغێن خواندنێ - کیمیا</title>
-    <meta name="description" content="ماڵپەرێ فەرمی یێ مامۆستایێن کیمیایێ م. سياد عبدالقادر و م. حسين اكرم بۆ پۆلێن ١٠، ١١، ١٢">
-    <meta property="og:title" content="قۆناغێن خواندنێ - کیمیا">
-    <meta property="og:description" content="ماڵپەرێ فەرمی یێ مامۆستایێن کیمیایێ م. سياد عبدالقادر و م. حسين اكرم بۆ پۆلێن ١٠، ١١، ١٢">
+    <meta name="description" content="ماڵپەرێ فەرمی یێ قۆناغێن خواندنێ بۆ گشت پۆلێن باخچە، سەرەتایی، ناوەندی و ئامادەیی">
+    <meta property="og:title" content="قۆناغێن خواندنێ">
+    <meta property="og:description" content="ماڵپەرێ فەرمی یێ قۆناغێن خواندنێ بۆ گشت پۆلێن باخچە، سەرەتایی، ناوەندی و ئامادەیی">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
@@ -655,19 +655,30 @@
     
     <!-- GOOGLE REGISTRATION & LOGIN MODAL (FIRST OPENING) -->
     <div id="google-auth-welcome-modal" class="modal-overlay" style="display:none; z-index:99999;">
-        <div class="modal-content" style="max-width:440px; text-align:center; padding:30px 24px; border-radius:20px; border:1px solid var(--border-color); box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-            <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15)); color:#4285F4; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 16px;">
+        <div class="modal-content" style="max-width:480px; text-align:center; padding:28px 24px; border-radius:20px; border:1px solid var(--border-color); box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+            <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15)); color:#4285F4; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 14px;">
                 <i class="fas fa-graduation-cap"></i>
             </div>
             <h2 style="margin:0 0 8px; font-size:1.35rem; color:var(--primary-text); font-weight:bold;">
                 بەخێربێیت بۆ پلاتفۆرمی فێرکاری
             </h2>
-            <p style="margin:0 0 24px; color:var(--secondary-text); font-size:0.92rem; line-height:1.6;">
+            <p style="margin:0 0 20px; color:var(--secondary-text); font-size:0.92rem; line-height:1.6;">
                 تکایە خۆت تۆماربکە و بە هەژماری Google پەیوەست ببە (ربط گوگل) بۆ ئەوەی ڕاستەوخۆ داخل بیت، یان بەردەوامبە.
             </p>
 
-            <!-- Official Sign in with Google Button -->
-            <button id="modal-google-signin-btn" class="gsi-material-button" style="width:100%; height:46px; justify-content:center; margin-bottom:14px;">
+            <!-- Error / Warning Info Box (Explains Cause & Solution) -->
+            <div id="google-auth-diag-box" style="display:none; margin-bottom:15px; padding:12px; border-radius:12px; background:rgba(255,193,7,0.1); border:1px solid rgba(255,193,7,0.35); text-align:right; font-size:0.85rem; line-height:1.6;">
+                <div style="font-weight:bold; color:#d39e00; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                    <i class="fas fa-exclamation-triangle"></i> <span id="auth-diag-title">ئەگەرێ کێشەیێ:</span>
+                </div>
+                <div id="auth-diag-desc" style="color:var(--primary-text); margin-bottom:8px;"></div>
+                <div style="font-size:0.8rem; color:var(--secondary-text); border-top:1px dashed rgba(255,193,7,0.4); padding-top:6px;">
+                    <strong>چارەسەری دەستبەجێ:</strong> دەتوانیت لە ڕێگەی فۆرمی خوارەوە ڕاستەوخۆ ناڤ و ئیمەیڵێ Google بنووسیت و داخل بیت بەبێ وەستان!
+                </div>
+            </div>
+
+            <!-- 1-Click Official Sign in with Google Button -->
+            <button id="modal-google-signin-btn" class="gsi-material-button" style="width:100%; height:46px; justify-content:center; margin-bottom:12px;">
                 <div class="gsi-material-button-state"></div>
                 <div class="gsi-material-button-content-wrapper">
                     <div class="gsi-material-button-icon">
@@ -679,19 +690,40 @@
                             <path fill="none" d="M0 0h48v48H0z"></path>
                         </svg>
                     </div>
-                    <span class="gsi-material-button-contents" style="font-size:0.95rem;">خۆتۆمارکردن و بەستنەوە بە Google</span>
+                    <span class="gsi-material-button-contents" style="font-size:0.95rem;">خۆتۆمارکردن و بەستنەوە بە Google (ربط گوگل)</span>
                 </div>
             </button>
 
-            <button id="modal-explore-guest-btn" class="btn-cancel" style="width:100%; padding:10px; font-size:0.88rem; border-radius:10px; justify-content:center; margin-bottom:12px;">
+            <!-- Quick Fallback Manual Google Form (Guaranteed to work if popup/domain blocked) -->
+            <div id="quick-google-link-box" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border-color); text-align:right;">
+                <details style="cursor:pointer;">
+                    <summary style="font-size:0.85rem; color:var(--blue-accent); font-weight:bold; margin-bottom:8px; outline:none;">
+                        <i class="fas fa-link"></i> کێشەت لەگەڵ پەنجەرەی گووگڵ هەیە؟ کلیک بکە بۆ بەستنەوەی ڕاستەوخۆ
+                    </summary>
+                    <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-top:8px;">
+                        <div class="form-group" style="text-align:right; margin-bottom:8px;">
+                            <label style="font-size:0.82rem;">ناوی تەواو (یان ناوی هەژماری گووگڵ)</label>
+                            <input type="text" id="manual-google-name" placeholder="بۆ نموونە: ئەحمەد یان م. حسێن" style="font-size:0.88rem; padding:8px 10px;">
+                        </div>
+                        <div class="form-group" style="text-align:right; margin-bottom:10px;">
+                            <label style="font-size:0.82rem;">ئیمەیڵی Google (@gmail.com)</label>
+                            <input type="email" id="manual-google-email" placeholder="example@gmail.com" style="font-size:0.88rem; padding:8px 10px;">
+                        </div>
+                        <button type="button" id="manual-google-login-btn" class="btn-save" style="width:100%; padding:9px; font-size:0.88rem; background:#4285F4; justify-content:center;">
+                            <i class="fab fa-google"></i> تۆمارکردن و چوونەژوورەوە بەم هەژمارە
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <button id="modal-explore-guest-btn" class="btn-cancel" style="width:100%; padding:10px; font-size:0.88rem; border-radius:10px; justify-content:center; margin-top:14px;">
                 بەردەوامبوون وەک میوان (Explore as Guest)
             </button>
-
-            <div style="font-size:0.85rem; color:var(--secondary-text); margin-top:8px;">
-                هەژماری ئیمەیڵت هەیە؟ <a href="login.html" style="color:var(--blue-accent); text-decoration:none; font-weight:bold;">چوونەژوورەوە بە ئیمەیڵ</a>
-            </div>
         </div>
     </div>
+
+    <!-- App Toast Container for Notifications -->
+    <div id="app-toast-container" class="app-toast-container"></div>
     
     <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>

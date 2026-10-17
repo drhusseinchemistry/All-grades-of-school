@@ -847,4 +847,50 @@ p { font-size: clamp(0.9rem, 2.5vw, 1rem); }
 .gdrive-icon-badge.image { background: rgba(16, 185, 129, 0.12); color: #10b981; }
 .gdrive-icon-badge.other { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
 
+/* Custom Toast Notification */
+.app-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.app-toast {
+  min-width: 280px;
+  max-width: 420px;
+  background: var(--surface-color);
+  color: var(--primary-text);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: rtl;
+  font-family: inherit;
+  font-size: 0.9rem;
+  pointer-events: auto;
+  animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.app-toast.success {
+  border-right: 5px solid #28a745;
+}
+.app-toast.info {
+  border-right: 5px solid #4285F4;
+}
+.app-toast.warning {
+  border-right: 5px solid #ffc107;
+}
+.app-toast.error {
+  border-right: 5px solid #dc3545;
+}
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 

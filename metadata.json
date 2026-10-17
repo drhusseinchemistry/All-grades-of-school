@@ -1,6 +1,6 @@
 {
   "name": "قۆناغێن خواندنێ - کیمیا",
-  "description": "ماڵپەرێ فەرمی یێ مامۆستایێن کیمیایێ م. سياد عبدالقادر و م. حسين اكرم بۆ پۆلێن ١٠، ١١، ١٢",
+  "description": "ماڵپەرێ فەرمی یێ قۆناغێن خواندنێ بۆ گشت پۆلێن باخچە، سەرەتایی، ناوەندی و ئامادەیی",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
