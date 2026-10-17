@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قۆناغێن خواندنێ - کیمیا</title>
+    <meta name="description" content="ماڵپەرێ فەرمی یێ مامۆستایێن کیمیایێ م. سياد عبدالقادر و م. حسين اكرم بۆ پۆلێن ١٠، ١١، ١٢">
+    <meta property="og:title" content="قۆناغێن خواندنێ - کیمیا">
+    <meta property="og:description" content="ماڵپەرێ فەرمی یێ مامۆستایێن کیمیایێ م. سياد عبدالقادر و م. حسين اكرم بۆ پۆلێن ١٠، ١١، ١٢">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .role-status-bar {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        .role-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--blue-accent);
+        }
+        .role-badge-pill.teacher {
+            background: rgba(138, 43, 226, 0.1);
+            color: #8A2BE2;
+        }
+        .role-badge-pill.admin {
+            background: rgba(230, 57, 70, 0.1);
+            color: #e63946;
+        }
+        .grade-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            margin-bottom: 10px;
+        }
+        .g-filter-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--primary-text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .g-filter-btn:hover {
+            border-color: var(--blue-accent);
+            background: rgba(0, 123, 255, 0.05);
+        }
+        .g-filter-btn.active {
+            background: var(--blue-accent);
+            color: #ffffff;
+            border-color: var(--blue-accent);
+        }
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 14px;
+            margin: 15px 0 30px;
+        }
+        .grade-card-item {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border-right: 5px solid var(--blue-accent);
+        }
+        .grade-card-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-color: var(--blue-accent);
+        }
+        .grade-card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--blue-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .role-option-card {
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .role-option-card:hover {
+            border-color: var(--blue-accent);
+            background: rgba(0, 123, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        .role-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--blue-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Followed Grades Banner */
+        .followed-banner {
+            background: linear-gradient(135deg, rgba(0,123,255,0.08), rgba(40,167,69,0.08));
+            border: 1px solid rgba(0,123,255,0.2);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            text-align: right;
+        }
+
+        /* Grade Checkboxes Grid */
+        .grade-checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .grade-check-item {
+            background: rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .grade-check-item:hover {
+            background: rgba(0,123,255,0.05);
+            border-color: var(--blue-accent);
+        }
+        .grade-check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--blue-accent);
+            cursor: pointer;
+        }
+
+        /* Language Radio items */
+        .lang-radio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 12px 0;
+        }
+        .lang-radio-box {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .lang-radio-box:hover {
+            border-color: var(--blue-accent);
+        }
+        .lang-radio-box.active {
+            border-color: var(--blue-accent);
+            background: rgba(0,123,255,0.08);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 840px;">
+        <!-- Top Bar Controls -->
+        <div class="page-controls">
+            <div class="language-selector-icon">
+                <button id="lang-toggle-btn" title="Guhertina Zimanî"><i class="fas fa-globe"></i></button>
+                <div id="lang-menu" class="lang-menu">
+                    <button class="btn-lang-small" data-lang="ku_ba">بادینی</button>
+                    <button class="btn-lang-small" data-lang="ku_so">سۆرانی</button>
+                    <button class="btn-lang-small" data-lang="ar">عربي</button>
+                    <button class="btn-lang-small" data-lang="en">EN</button>
+                </div>
+            </div>
+            <button id="settings-toggle-btn" class="theme-toggle-button" title="ڕێکخستنێن گشتی (Settings)">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <!-- Role Status Bar -->
+        <div class="role-status-bar" id="role-status-bar">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:0.9rem; color:var(--secondary-text);">ڕۆڵێ تە یێ نها:</span>
+                <span class="role-badge-pill" id="home-role-badge">
+                    <i class="fas fa-user-graduate"></i> <span id="home-role-text">قوتابی</span>
+                </span>
+                <span id="home-lang-indicator" style="font-size:0.8rem; background:rgba(0,123,255,0.1); color:var(--blue-accent); padding:2px 8px; border-radius:10px;">باهدینی</span>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <button id="open-settings-btn" class="btn-cancel" style="padding: 5px 12px; font-size: 0.8rem;">
+                    <i class="fas fa-sliders-h"></i> ڕێکخستن
+                </button>
+                <button id="open-role-selector-btn" class="btn-cancel" style="padding: 5px 12px; font-size: 0.8rem;">
+                    <i class="fas fa-exchange-alt"></i> گۆڕینی ڕۆڵ
+                </button>
+                <a href="teacher-dashboard.html" id="home-teacher-link" class="btn-save" style="padding: 5px 14px; font-size: 0.8rem; text-decoration:none; display:none;">
+                    <i class="fas fa-chalkboard-teacher"></i> پەناڵی مامۆستایان
+                </a>
+                <a href="admin-panel.html" id="home-admin-link" class="btn-save" style="background:#e63946; padding: 5px 14px; font-size: 0.8rem; text-decoration:none; display:none;">
+                    <i class="fas fa-shield-alt"></i> پەناڵی ئەدمین
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <header class="profile-header" id="admin-login-trigger">
+            <div class="title-container">
+                <h1 id="profile-name" data-translate-key="profile_name">م. سياد عبدالقادر، م.حسين اكرم</h1>
+            </div>
+            <h2 id="profile-title" data-translate-key="profile_title">ماموستایێ بابەتا کیمیایێ</h2>
+            <p class="username-tag" id="profile-username" data-translate-key="profile_username">@Dr.hussein.chemistry</p>
+            <button id="edit-main-btn" class="edit-button" data-translate-key="edit_this_section">گوهۆرینا ڤی بەشی</button>
+        </header>
+
+        <!-- Followed Grades Indicator Banner (When student has custom picked grades) -->
+        <div class="followed-banner" id="followed-grades-banner" style="display:none;">
+            <div>
+                <strong style="color:var(--blue-accent); font-size:0.95rem;">
+                    <i class="fas fa-check-circle"></i> پۆلێن دیارکری یێن تە:
+                </strong>
+                <span id="followed-grades-names" style="margin-right:6px; font-weight:bold;"></span>
+                <div style="font-size:0.8rem; color:var(--secondary-text); margin-top:2px;">
+                    تەنێ ئەو پۆلانە نیشان دەدرێن کە تۆ دیاریت کردوون.
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button id="edit-followed-grades-btn" class="btn-save" style="padding:6px 14px; font-size:0.8rem;">
+                    <i class="fas fa-cog"></i> گۆڕین لە ڕێکخستن
+                </button>
+                <button id="show-all-grades-toggle" class="btn-cancel" style="padding:6px 12px; font-size:0.8rem;">
+                    هەموو پۆلەکان
+                </button>
+            </div>
+        </div>
+
+        <!-- Grade Selection Section Title -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:25px; text-align:right;">
+            <div>
+                <h2 style="margin:0 0 4px; font-size:1.35rem;">
+                    <i class="fas fa-layer-group" style="color:var(--blue-accent);"></i> هەلبژارتنا قۆناغا خواندنێ
+                </h2>
+                <p style="margin:0; color:var(--secondary-text); font-size:0.85rem;">
+                    ژ باخچەی ساوایان هەتا پۆلا دوازدێ ئامادەیی
+                </p>
+            </div>
+            <span style="font-size:0.85rem; color:var(--secondary-text);" id="total-visible-grades-count">١٣ قۆناغێن خواندنێ</span>
+        </div>
+
+        <!-- Filter Pills for Grades -->
+        <div class="grade-filters">
+            <button class="g-filter-btn active" data-filter="all">هەمی پۆل</button>
+            <button class="g-filter-btn" data-filter="kindergarten">باخچە</button>
+            <button class="g-filter-btn" data-filter="primary">سەرەتایی (١ تا ٦)</button>
+            <button class="g-filter-btn" data-filter="middle">ناوەندی (٧ تا ٩)</button>
+            <button class="g-filter-btn" data-filter="high">ئامادەیی (١٠ تا ١٢)</button>
+        </div>
+
+        <!-- ALL GRADES GRID (Filtered by student followed preferences) -->
+        <div class="grades-grid" id="grades-grid-container">
+            <!-- Dynamically populated from GRADES_CONFIG -->
+        </div>
+
+        <!-- ADDITIONAL APP FEATURES (Original features preserved) -->
+        <div style="text-align:right; margin: 30px 0 15px;">
+            <h3 style="margin:0 0 4px; font-size:1.2rem;">
+                <i class="fas fa-th-large" style="color:#8A2BE2;"></i> بەش و ئامرازێن دی یێن فێربوونێ
+            </h3>
+            <p style="margin:0; color:var(--secondary-text); font-size:0.85rem;">
+                پەرتووک، پۆستێن گشتی، ژیریی دەستکرد، و سابورە
+            </p>
+        </div>
+
+        <main class="action-links" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+            <a href="book.html?pola=12" class="action-card purple">
+                <i class="fas fa-book-open"></i>
+                <h3 data-translate-key="book_card_title">پەرتووکا کیمیایێ</h3>
+                <p>پەرتووکێ ب شێوازێ ئەلیکترۆنی بخوینە</p>
+            </a>
+            <a href="posts.html" class="action-card" style="border-inline-start-color: #fd7e14;">
+                <i class="fas fa-newspaper" style="color: #fd7e14;"></i>
+                <h3 data-translate-key="public_posts_title">پوستێن گشتی</h3>
+                <p data-translate-key="public_posts_desc">بابەت و ئاگەهداريێن گشتی</p>
+            </a>
+            <a href="ai-studio.html" class="action-card" style="border-inline-start-color: #5856d6;">
+                <i class="fas fa-robot" style="color: #5856d6;"></i>
+                <h3 data-translate-key="ai_assistant_title">AI Assistant</h3>
+                <p data-translate-key="ai_assistant_desc">پسیارا خو ل Ai بکە ب هەر زمانەکێ بڤێت</p>
+            </a>
+            <a href="calculated.html" class="action-card" style="border-inline-start-color: #00b4d8;">
+                <i class="fas fa-calculator" style="color: #00b4d8;"></i>
+                <h3>حاسیبەی زانستی Casio</h3>
+                <p>حاسیبەی پێشکەفتی بۆ کیمیا و بیرکاری</p>
+            </a>
+            <a href="board.html" class="action-card" style="border-inline-start-color: #28a745;">
+                <i class="fas fa-chalkboard" style="color: #28a745;"></i>
+                <h3>سابورە (Whiteboard)</h3>
+                <p>تەختەی سپی بۆ شیکارکرن و وێنەکێشان</p>
+            </a>
+            <a href="chat.html" class="action-card" style="border-inline-start-color: #e63946;">
+                <i class="fas fa-headset" style="color: #e63946;"></i>
+                <h3 data-translate-key="support_card_title">پشتەڤانی</h3>
+                <p data-translate-key="support_card_desc">ل گەل ماموستایێ خۆ باخڤە</p>
+            </a>
+        </main>
+
+        <!-- Footer -->
+        <footer class="contact-footer">
+            <h3 id="footer-title" data-translate-key="contact_footer_title">بۆ پسیار و پێشنیاران</h3>
+            <p id="footer-description" data-translate-key="contact_footer_desc">دشێی ب ڕێکا ڤان لینکان پەیوەندیێ ب من بکەی:</p>
+            <div class="social-icons" id="social-icons"></div>
+            <p class="copyright" data-translate-key="copyright_text">© 2024 | هەمی ماف پاراستینە</p>
+        </footer>
+    </div>
+    
+    <!-- 1. ROLE SELECTION MODAL -->
+    <div id="role-selection-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px; text-align:right;">
+            <h2 style="margin: 0 0 6px; font-size: 1.4rem; text-align:center;">بەخێربێیت! تۆ چ بەکارهێنەری؟</h2>
+            <p style="margin: 0 0 20px; color: var(--secondary-text); font-size: 0.9rem; text-align:center;">
+                تکایە ڕۆڵێ خۆ هەڵبژێرە بۆ بەردەوامبوون لە ماڵپەڕدا
+            </p>
+
+            <!-- Option 1: Student -->
+            <div class="role-option-card" id="choose-student-btn">
+                <div class="role-icon-box" style="background:rgba(40,167,69,0.15); color:#28a745;">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div style="flex:1;">
+                    <h3 style="margin:0 0 4px; font-size:1.15rem; color:#28a745;">ئەز قوتابیمە (Student)</h3>
+                    <p style="margin:0; font-size:0.85rem; color:var(--secondary-text);">
+                        هەڵبژاردنی ئەو پۆلانەی تۆ دەیانخوێنیت، بینینی مامۆستایان، مەلزەمە، ڤیدیۆ و تاقیکردنەوە.
+                    </p>
+                </div>
+                <i class="fas fa-chevron-left" style="color:var(--secondary-text);"></i>
+            </div>
+
+            <!-- Option 2: Teacher -->
+            <div class="role-option-card" id="choose-teacher-btn">
+                <div class="role-icon-box" style="background:rgba(0,123,255,0.15); color:var(--blue-accent);">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div style="flex:1;">
+                    <h3 style="margin:0 0 4px; font-size:1.15rem; color:var(--blue-accent);">ئەز مامۆستامە (Teacher)</h3>
+                    <p style="margin:0; font-size:0.85rem; color:var(--secondary-text);">
+                        تۆمارکردنی ناڤ لە لیستی مامۆستایان، ئەپلودکرنی مەلزەمە، پاوەرپوینت، یوتیوب، و پرسیار.
+                    </p>
+                </div>
+                <i class="fas fa-chevron-left" style="color:var(--secondary-text);"></i>
+            </div>
+
+            <!-- Option 3: Super Admin Login / Fast Track -->
+            <div class="role-option-card" id="choose-admin-btn" style="border-color:rgba(230,57,70,0.3); background:rgba(230,57,70,0.03);">
+                <div class="role-icon-box" style="background:rgba(230,57,70,0.15); color:#e63946;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div style="flex:1;">
+                    <h3 style="margin:0 0 4px; font-size:1.1rem; color:#e63946;">چوونا ژوور وەکو ئەدمینێ گشتی</h3>
+                    <p style="margin:0; font-size:0.8rem; color:var(--secondary-text);">
+                        Hussein.zebary.chemistry96@gmail.com - دەسەڵاتی تەواو بەسەر گشت پۆل و مامۆستایاندا.
+                    </p>
+                </div>
+                <i class="fas fa-key" style="color:#e63946;"></i>
+            </div>
+
+            <div style="text-align:center; margin-top:15px;">
+                <button type="button" id="close-role-modal-btn" class="btn-cancel" style="padding:6px 20px; font-size:0.85rem;">
+                    داخستن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. STUDENT GRADE SELECTION ONBOARDING MODAL -->
+    <div id="student-grades-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 520px; text-align:right;">
+            <div style="text-align:center; margin-bottom:15px;">
+                <div style="width:60px; height:60px; border-radius:50%; background:rgba(40,167,69,0.15); color:#28a745; display:inline-flex; align-items:center; justify-content:center; font-size:1.8rem; margin-bottom:10px;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2 style="margin:0 0 6px; font-size:1.35rem;">بەخێربێی قوتابیێ هێژا!</h2>
+                <p style="margin:0; color:var(--secondary-text); font-size:0.88rem;">
+                    ئەو پۆلێن تۆ دخوێنی یان تە دڤێت لە سەرەکی ببینیت هەڵبژێرە، تەنێ ئەو پۆلانە نیشان دەدرێن.
+                </p>
+            </div>
+
+            <!-- Quick Presets -->
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+                <button type="button" class="btn-lang-small preset-grades-btn" data-preset="high">ئامادەیی (١٠، ١١، ١٢)</button>
+                <button type="button" class="btn-lang-small preset-grades-btn" data-preset="middle">ناوەندی (٧، ٨، ٩)</button>
+                <button type="button" class="btn-lang-small preset-grades-btn" data-preset="primary">سەرەتایی (١ تا ٦)</button>
+                <button type="button" class="btn-lang-small preset-grades-btn" data-preset="all">هەموو پۆلەکان</button>
+            </div>
+
+            <!-- Checkbox list of all 13 grades -->
+            <div class="grade-checkbox-grid" id="onboard-grades-grid">
+                <!-- Injected dynamically -->
+            </div>
+
+            <div class="form-actions" style="margin-top:20px;">
+                <button type="button" id="save-student-grades-btn" class="btn-save" style="width:100%; padding:12px; font-size:1rem;">
+                    <i class="fas fa-check"></i> تۆمارکردن و بینینی پۆلەکان
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. SETTINGS MODAL (بەشێ ڕێکخستن) -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 520px; text-align:right;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                <h2 style="margin:0; font-size:1.3rem;">
+                    <i class="fas fa-cog" style="color:var(--blue-accent);"></i> ڕێکخستنێن گشتی یێن بەرنامەی
+                </h2>
+                <button type="button" class="close-doc-btn" id="close-settings-btn">&times;</button>
+            </div>
+
+            <!-- Section 1: Followed Grades -->
+            <div style="margin-bottom:20px;">
+                <label style="font-weight:bold; font-size:0.95rem; display:block; margin-bottom:6px;">
+                    <i class="fas fa-user-check" style="color:#28a745;"></i> پۆلێن من یێن دڵخواز (پۆلەکانی سەرەکی):
+                </label>
+                <p style="margin:0 0 10px; font-size:0.8rem; color:var(--secondary-text);">
+                    دەتوانیت هەرکاتێک بێت پۆلە دڵخوازەکانت کەم یان زیاد بکەیت:
+                </p>
+                <div class="grade-checkbox-grid" id="settings-grades-grid">
+                    <!-- Populated dynamically -->
+                </div>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <button type="button" id="settings-check-all-btn" class="btn-lang-small">هەڵبژاردنی هەموو پۆلەکان</button>
+                    <button type="button" id="settings-check-high-btn" class="btn-lang-small">تەنێ ئامادەیی</button>
+                </div>
+            </div>
+
+            <!-- Section 2: Language Filtering -->
+            <div style="margin-bottom:20px; border-top:1px solid var(--border-color); padding-top:15px;">
+                <label style="font-weight:bold; font-size:0.95rem; display:block; margin-bottom:6px;">
+                    <i class="fas fa-globe" style="color:var(--blue-accent);"></i> زمانێ بەرنامەی و مامۆستایان:
+                </label>
+                <p style="margin:0 0 10px; font-size:0.8rem; color:var(--secondary-text);">
+                    هەر زمانێک هەڵبژێریت، تەنێ مامۆستا و بابەتەکانی ئەو زمانە دەردەکەون:
+                </p>
+                <div class="lang-radio-grid" id="settings-lang-grid">
+                    <div class="lang-radio-box" data-lang="ku_ba">
+                        <input type="radio" name="set_lang" value="ku_ba" id="lang_ba">
+                        <label for="lang_ba" style="cursor:pointer;">باهدینی (Badini)</label>
+                    </div>
+                    <div class="lang-radio-box" data-lang="ku_so">
+                        <input type="radio" name="set_lang" value="ku_so" id="lang_so">
+                        <label for="lang_so" style="cursor:pointer;">سۆرانی (Sorani)</label>
+                    </div>
+                    <div class="lang-radio-box" data-lang="ar">
+                        <input type="radio" name="set_lang" value="ar" id="lang_ar">
+                        <label for="lang_ar" style="cursor:pointer;">عەرەبی (Arabic)</label>
+                    </div>
+                    <div class="lang-radio-box" data-lang="en">
+                        <input type="radio" name="set_lang" value="en" id="lang_en">
+                        <label for="lang_en" style="cursor:pointer;">ئینگلیزی (English)</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Theme -->
+            <div style="margin-bottom:20px; border-top:1px solid var(--border-color); padding-top:15px;">
+                <label style="font-weight:bold; font-size:0.95rem; display:block; margin-bottom:6px;">
+                    <i class="fas fa-palette" style="color:#fd7e14;"></i> شێوازی ڕووکار:
+                </label>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn-cancel" id="set-light-theme-btn" style="flex:1;">
+                        <i class="fas fa-sun"></i> ڕووناک (Light)
+                    </button>
+                    <button type="button" class="btn-cancel" id="set-dark-theme-btn" style="flex:1;">
+                        <i class="fas fa-moon"></i> تاریک (Dark)
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:20px;">
+                <button type="button" id="save-all-settings-btn" class="btn-save" style="width:100%; padding:12px;">
+                    <i class="fas fa-save"></i> پاشکەفتنا ڕێکخستنان
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. TEACHER ONBOARDING MODAL -->
+    <div id="teacher-register-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 450px; text-align:right;">
+            <h2 class="modal-header">تۆمارکرنی ناڤی مامۆستا</h2>
+            <p style="margin:0 0 15px; color:var(--secondary-text); font-size:0.85rem;">
+                ناڤێ تە دێ چیتە ناڤ لیستی فەرمی یێ مامۆستایان بۆ ئەو پۆلێن تۆ هەڵدەبژێریت.
+            </p>
+            <form id="teacher-register-form">
+                <div class="form-group" style="text-align:right;">
+                    <label>ناڤێ سێ قۆڵی</label>
+                    <input type="text" id="reg-teacher-name" placeholder="بۆ نموونە: م. حسێن ئەکرەم زێباری" required>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>وانە (بابەت)</label>
+                    <input type="text" id="reg-teacher-subject" placeholder="کیمیا، فیزیا، بیرکاری، ئینگلیزی..." required>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>زمانێ وانەگۆتنێ</label>
+                    <select id="reg-teacher-lang" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                        <option value="ku_ba" selected>باهدینی</option>
+                        <option value="ku_so">سۆرانی</option>
+                        <option value="ar">عەرەبی</option>
+                        <option value="en">English (ئینگلیزی)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>ئیمەیل یان ژمارا مۆبایلێ</label>
+                    <input type="text" id="reg-teacher-contact" placeholder="0750... یان example@gmail.com">
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>پۆلێن تۆ وانە تێدا دەڵێیتەوە</label>
+                    <select id="reg-teacher-grades" multiple style="width:100%; height:90px; padding:6px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                        <option value="12" selected>پۆلا ١٢</option>
+                        <option value="11" selected>پۆلا ١١</option>
+                        <option value="10" selected>پۆلا ١٠</option>
+                        <option value="9">پۆلا ٩</option>
+                        <option value="8">پۆلا ٨</option>
+                        <option value="7">پۆلا ٧</option>
+                        <option value="6">پۆلا ٦</option>
+                        <option value="5">پۆلا ٥</option>
+                        <option value="4">پۆلا ٤</option>
+                        <option value="3">پۆلا ٣</option>
+                        <option value="2">پۆلا ٢</option>
+                        <option value="1">پۆلا ١</option>
+                        <option value="kg">باخچەی ساوایان</option>
+                    </select>
+                    <small style="color:var(--secondary-text);">دشێی چەند پۆلەکا پێکڤە هەلبژێری.</small>
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn-save">چوونە ناڤ پەناڵی مامۆستا</button>
+                    <button type="button" id="close-teacher-reg-btn" class="btn-cancel">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. EDIT PAGE MODAL (Original) -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 data-translate-key="edit_modal_title">گوهۆرینا زانیاریێن لاپەڕی</h2>
+             <form id="edit-form">
+                <div class="form-group"><label data-translate-key="main_name">ناڤێ سەرەکی</label><input type="text" id="edit-profile-name"></div>
+                <div class="form-group"><label data-translate-key="secondary_title">ناڤونیشانێ دووێ</label><input type="text" id="edit-profile-title"></div>
+                <div class="form-group"><label data-translate-key="username">یوزەرنەیم</label><input type="text" id="edit-profile-username"></div><hr>
+                <div class="form-group"><label data-translate-key="footer_title">ناڤونیشانێ بەشێ بنی</label><input type="text" id="edit-footer-title"></div>
+                <div class="form-group"><label data-translate-key="footer_desc">کورتەیا بەشێ بنی</label><input type="text" id="edit-footer-desc"></div>
+                <div class="form-group">
+                    <label data-translate-key="social_links">لینکێن سوسیال میدیایێ</label>
+                    <input type="url" id="social-facebook" placeholder="لینکێ فەیسبوکی">
+                    <input type="url" id="social-instagram" placeholder="لینکێ ئینستاگرامی" style="margin-top: 5px;">
+                    <input type="url" id="social-telegram" placeholder="لینکێ تێلێگرامی" style="margin-top: 5px;">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save" data-translate-key="save">پاشکەفتن</button>
+                    <button type="button" id="modalCloseBtn" class="btn-cancel" data-translate-key="close">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. LOGIN MODAL -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 class="modal-header" data-translate-key="admin_login_title">چوونا ژوور یا ئەدمینی</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email" data-translate-key="email">ئیمەیل</label>
+                    <input type="email" id="email" value="Hussein.zebary.chemistry96@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" data-translate-key="password">تێپەڕەوشە</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <p id="login-error" class="error-text"></p>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save" data-translate-key="login">چوونا ژوور</button>
+                    <button type="button" id="login-cancel-btn" class="btn-cancel" data-translate-key="close">داخستن</button>
+                </div>
+            </form>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); text-align:center;">
+                <button type="button" id="fast-admin-auth-btn" class="btn-save" style="background:#e63946; font-size:0.85rem; padding:8px 16px;">
+                    <i class="fas fa-bolt"></i> چوونەژوورەوەی خێرا وەکو م. حسێن (Super Admin)
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="translations.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="educational-data.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="index-script.js"></script>
+</body>
+</html>

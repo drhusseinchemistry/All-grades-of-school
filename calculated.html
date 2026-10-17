@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casio FX-82MS Simulator</title>
+    <link rel="stylesheet" href="style_calculate.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="header">
+            <span>CASIO</span>
+            <span class="model-name">fx-82MS</span>
+        </div>
+        <div class="screen">
+            <div class="indicators">
+                <span id="shift-indicator"></span>
+                <span id="alpha-indicator"></span>
+                <span id="sto-indicator"></span>
+                <span id="rcl-indicator"></span>
+            </div>
+            <div class="expression-display"></div>
+            <div class="result-display">0</div>
+        </div>
+
+        <div class="buttons">
+            <!-- Top Control Row -->
+            <div class="button-row-special">
+                <div>
+                    <button class="btn-func" data-key="shift">SHIFT</button>
+                    <button class="btn-func history-btn" data-key="history">History</button>
+                </div>
+                <button class="btn-func" data-key="alpha">ALPHA</button>
+                <div class="replay-pad">
+                    <button class="replay-btn up" data-key="up">▲</button>
+                    <button class="replay-btn left" data-key="left">◀</button>
+                    <button class="replay-btn right" data-key="right">▶</button>
+                    <button class="replay-btn down" data-key="down">▼</button>
+                    <div class="replay-center">REPLAY</div>
+                </div>
+                <button class="btn-func" data-key="mode">MODE</button>
+                <button class="btn-func" data-key="on" data-shift-key="off">ON</button>
+            </div>
+
+            <!-- Function Rows -->
+            <div class="button-row">
+                <button class="btn-op" data-value="^(-1)" data-shift-value="!">x⁻¹</button>
+                <button class="btn-op" data-value="nCr(" data-shift-value="nPr(">nCr</button>
+                <button class="btn-op" data-value="Pol(" data-shift-value="Rec(">Pol(</button>
+                <button class="btn-op" data-value="^3" data-shift-value="³√(">x³</button>
+            </div>
+            <div class="button-row">
+                <button class="btn-op" data-value="/c" data-shift-value="d/c">ab/c</button>
+                <button class="btn-op" data-value="√(">√</button>
+                <button class="btn-op" data-value="^2">x²</button>
+                <button class="btn-op" data-value="^(">^</button>
+                <button class="btn-op" data-value="log(" data-shift-value="10^(">log</button>
+                <button class="btn-op" data-value="ln(" data-shift-value="e^(">ln</button>
+            </div>
+            <div class="button-row">
+                <button class="btn-op" data-key="negate" data-shift-key="A">(-)</button>
+                <button class="btn-op" data-value="°" data-shift-key="B">° ' ''</button>
+                <button class="btn-op" data-value="hyp" data-shift-key="C">hyp</button>
+                <button class="btn-op" data-value="sin(" data-shift-value="sin⁻¹(">sin</button>
+                <button class="btn-op" data-value="cos(" data-shift-value="cos⁻¹(">cos</button>
+                <button class="btn-op" data-value="tan(" data-shift-value="tan⁻¹(">tan</button>
+            </div>
+            <div class="button-row">
+                <button class="btn-func" data-key="rcl" data-shift-key="sto">RCL</button>
+                <button class="btn-func" data-key="eng">ENG</button>
+                <button class="btn-op" data-value="(" data-shift-key="X">(</button>
+                <button class="btn-op" data-value=")" data-shift-key="Y">)</button>
+                <button class="btn-op" data-value="," data-shift-value=";">,</button>
+                <button class="btn-op" data-key="m-plus" data-shift-key="m-minus">M+</button>
+            </div>
+            <!-- Numpad -->
+            <div class="button-row main-grid">
+                <button class="btn-num" data-value="7">7</button>
+                <button class="btn-num" data-value="8">8</button>
+                <button class="btn-num" data-value="9">9</button>
+                <button class="btn-del" data-key="del">DEL</button>
+                <button class="btn-ac" data-key="ac">AC</button>
+                <button class="btn-num" data-value="4">4</button>
+                <button class="btn-num" data-value="5">5</button>
+                <button class="btn-num" data-value="6">6</button>
+                <button class="btn-op" data-value="×">×</button>
+                <button class="btn-op" data-value="÷">÷</button>
+                <button class="btn-num" data-value="1">1</button>
+                <button class="btn-num" data-value="2">2</button>
+                <button class="btn-num" data-value="3">3</button>
+                <button class="btn-op" data-value="+">+</button>
+                <button class="btn-op" data-value="-">−</button>
+                <button class="btn-num" data-value="0">0</button>
+                <button class="btn-num" data-value=".">.</button>
+                <button class="btn-op" data-value="E" data-shift-value="π">EXP</button>
+                <button class="btn-op" data-key="ans">Ans</button>
+                <button class="btn-equal" data-key="=" data-shift-value="%">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW HISTORY MODAL -->
+    <div id="history-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>History</h2>
+            <ul id="history-list">
+                <!-- History items will be injected here by JavaScript -->
+            </ul>
+            <button id="close-history-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="script_calculated.js"></script>
+</body>
+</html>

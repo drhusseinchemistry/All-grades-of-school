@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پشتەڤانی</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.css">
+    <script type="text/javascript" src="https://uicdn.toast.com/tui-code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script type="text/javascript" src="https://uicdn.toast.com/tui-color-picker/v2.2.7/tui-color-picker.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
+    <script type="text/javascript" src="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i></a>
+            <h1>پشتەڤانی</h1>
+            <div id="connection-status" class="status-indicator disconnected" title="Disconnected"></div>
+        </header>
+        <main id="chat-messages" class="chat-messages">
+            <p class="system-message">تکایە چرکەکێ بوەستە...</p>
+        </main>
+        <footer class="chat-input-area">
+            <div id="image-preview-container" class="image-preview-container">
+                <button id="remove-preview-btn">&times;</button>
+            </div>
+            <form id="message-form">
+                <input type="file" id="file-input" accept="image/*,video/*" style="display: none;">
+                <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
+                <input type="text" id="message-input" placeholder="ناما خۆ بنڤیسە..." autocomplete="off">
+                <button type="submit" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </footer>
+    </div>
+
+    <div id="editor-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001;">
+        <div id="tui-image-editor-container" style="width: 95%; height: 90%; margin: auto;"></div>
+        <button id="save-image-btn" style="position: absolute; bottom: 10px; right: 10px; z-index: 1002; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">پاشکەفتن</button>
+        <button id="cancel-image-btn" style="position: absolute; bottom: 10px; left: 10px; z-index: 1002; padding: 10px 20px; background: #555; color: white; border: none; border-radius: 5px; cursor: pointer;">پاشگەزبوون</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="chat-script.js"></script>
+</body>
+</html>

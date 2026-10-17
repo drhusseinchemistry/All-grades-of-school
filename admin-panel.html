@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پەناڵی ئەدمین | م. حسێن ئەکرەم زێباری</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .admin-nav-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 15px;
+            background: var(--surface-color);
+            align-items: center;
+        }
+        .admin-tab {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--primary-text);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .admin-tab.active {
+            background: #e63946;
+            color: #ffffff;
+            border-color: #e63946;
+        }
+        .count-pill {
+            background: rgba(255,255,255,0.3);
+            color: inherit;
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .admin-tab.active .count-pill {
+            background: #ffffff;
+            color: #e63946;
+        }
+        .approval-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            text-align: right;
+            border-right: 5px solid #ff9800;
+        }
+        .approval-card.approved-border {
+            border-right-color: #28a745;
+        }
+        .approval-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .teacher-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .action-btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-approve-action {
+            background: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-reject-action {
+            background: #ff9800;
+            color: #ffffff;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-delete-action {
+            background: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- Super Admin Header Bar -->
+    <div style="background: linear-gradient(135deg, #1f2937, #111827); color:#ffffff; padding: 12px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap: 12px;">
+            <i class="fas fa-user-shield" style="color: #e63946; font-size: 1.5rem;"></i>
+            <div>
+                <strong style="font-size: 1.05rem;">پەناڵی دەسەڵاتدارێ گشتی (Super Admin)</strong>
+                <span style="font-size:0.8rem; color:#9ca3af; margin-right:10px;">Hussein.zebary.chemistry96@gmail.com</span>
+            </div>
+        </div>
+        <div style="display:flex; gap: 10px; align-items:center;">
+            <a href="index.html" class="btn-cancel" style="padding: 6px 14px; font-size: 0.85rem; text-decoration:none; color:#ffffff; border-color:#4b5563;">
+                <i class="fas fa-home"></i> ماڵپەرێ سەرەکی
+            </a>
+            <a href="teacher-dashboard.html" class="btn-cancel" style="padding: 6px 14px; font-size: 0.85rem; text-decoration:none; color:#ffffff; border-color:#4b5563;">
+                <i class="fas fa-chalkboard-teacher"></i> پەناڵی مامۆستا
+            </a>
+            <button id="admin-logout-btn" class="btn-cancel" style="background:#dc3545; border-color:#dc3545; color:#ffffff; padding: 6px 14px; font-size: 0.85rem;">
+                <i class="fas fa-sign-out-alt"></i> دەرکەفتن
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="admin-nav-bar">
+        <button class="admin-tab active" data-view="approvals-view">
+            <i class="fas fa-clipboard-check"></i> پێداچوون و پەسەندکرنا مامۆستایان 
+            <span class="count-pill" id="pending-badge-count">0</span>
+        </button>
+        <button class="admin-tab" data-view="ai-template-view">
+            <i class="fas fa-magic" style="color:#00b4d8;"></i> قالبی پاوەرپۆینت و ژیریی دەستکرد (AI Template)
+        </button>
+        <button class="admin-tab" data-view="teachers-mgmt-view">
+            <i class="fas fa-users-cog"></i> بەڕێوەبردنی مامۆستایان
+        </button>
+        <button class="admin-tab" data-view="user-management-view">
+            <i class="fas fa-user-friends"></i> بەکارهێنەران و بەشداری
+        </button>
+        <button class="admin-tab" data-view="admin-chat-view">
+            <i class="fas fa-comments"></i> چات و پشتەڤانی
+        </button>
+    </div>
+
+    <div class="admin-container" style="padding: 20px 15px; max-width: 1100px; margin: 0 auto; display:block;">
+        
+        <!-- VIEW 1: APPROVALS FOR TEACHER SUBMISSIONS (VIDEOS, QUIZZES, MALZAMAS) -->
+        <div id="approvals-view" class="content-view" style="display: block;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin:0 0 5px; font-size:1.4rem;">
+                        <i class="fas fa-tasks" style="color:#e63946;"></i> داخوازیێن پەسەندکرنێ (ڤیدیۆ، پرسیار، مەلزەمە)
+                    </h2>
+                    <p style="margin:0; color:var(--secondary-text); font-size:0.9rem;">
+                        هەمی ئەو بابەتێن مامۆستایان یێن کو ل چاڤەڕێی پەسەندکرنا تە نە بۆ ئەوەی بچنە ناڤ سیستەمێ گشتی.
+                    </p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-lang-small filter-approval-btn active" data-filter="pending">ل چاڤەڕێیێ (Pending)</button>
+                    <button class="btn-lang-small filter-approval-btn" data-filter="all">هەمی بابەت</button>
+                </div>
+            </div>
+
+            <!-- Approvals Container -->
+            <div id="approvals-list-container">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- VIEW 2: TEACHERS MANAGEMENT -->
+        <div id="teachers-mgmt-view" class="content-view" style="display: none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                <div>
+                    <h2 style="margin:0 0 5px; font-size:1.4rem;">
+                        <i class="fas fa-chalkboard-teacher" style="color:var(--blue-accent);"></i> لیستی فەرمی یێ مامۆستایان
+                    </h2>
+                    <p style="margin:0; color:var(--secondary-text); font-size:0.9rem;">
+                        ڕێزبەندی مامۆستایان بەپێی زۆرترین تەماشاکردنی قوتابیان (بینین)
+                    </p>
+                </div>
+                <button id="add-new-teacher-btn" class="btn-save" style="padding: 9px 18px; font-size: 0.9rem;">
+                    <i class="fas fa-plus"></i> زیادکردنی مامۆستای نوێ
+                </button>
+            </div>
+            <div id="teachers-mgmt-list">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- VIEW 3: USER MANAGEMENT (Original) -->
+        <div id="user-management-view" class="content-view" style="display: none;">
+            <h2 style="margin: 0 0 15px; font-size: 1.3rem;"><i class="fas fa-users"></i> بەڕێوەبردنی هەژمارەکانی بەکارهێنەران</h2>
+            <ul id="admin-user-list" style="list-style:none; padding:0; margin:0;">
+                <!-- User management items will be loaded here -->
+            </ul>
+        </div>
+
+        <!-- VIEW 4: CHATS (Original) -->
+        <div id="admin-chat-view" class="content-view" style="display: none;">
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <div id="welcome-message">
+                        <h2>بەخێربێیت بۆ پەناڵی چاتەکان</h2>
+                        <p>بۆ دەستپێکردن، چاتێکی بەکارهێنەر لە لیستی لای ڕاست هەڵبژێرە.</p>
+                    </div>
+                    <main id="chat-messages" class="chat-messages" style="display: none; height: 350px; overflow-y: auto; background: var(--surface-color); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);"></main>
+                    <footer class="chat-input-area" style="display: none; margin-top: 15px;">
+                        <form id="message-form" style="display: flex; gap: 10px;">
+                            <input type="text" id="message-input" placeholder="وەڵام بنووسە..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-color); color: var(--primary-text);">
+                            <button type="submit" id="send-btn" class="btn-save"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </footer>
+                </div>
+                <aside class="sidebar" style="width: 280px;">
+                    <h3 style="margin-top:0;">نامە و چاتەکان</h3>
+                    <ul id="user-list" style="list-style: none; padding: 0; margin: 0;">
+                        <!-- User chat list will be loaded here -->
+                    </ul>
+                </aside>
+        <!-- VIEW 5: AI & POWERPOINT MASTER TEMPLATE MANAGEMENT -->
+        <div id="ai-template-view" class="content-view" style="display: none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin:0 0 5px; font-size:1.4rem;">
+                        <i class="fas fa-magic" style="color:#00b4d8;"></i> دیزاینێ قالبی پاوەرپۆینت و ژیریی دەستکرد (Master AI Template)
+                    </h2>
+                    <p style="margin:0; color:var(--secondary-text); font-size:0.9rem;">
+                        دەسەڵاتی ئەدمین بۆ گۆڕینی قالبی سەرەکی پاوەرپۆینتی مامۆستایان. هەر گۆڕانکارییەک لێرە بکەیت، بۆ هەموو مامۆستایان جێبەجێ دەبێت کاتێ بابەتی نوێ لە ڕێگەی Gemini دروست دەکەن.
+                    </p>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button id="btn-save-ai-template" class="btn-save" style="background:#00b4d8; padding:9px 18px; font-size:0.9rem;">
+                        <i class="fas fa-save"></i> پاشەکەوتکردن بو گشت مامۆستایان
+                    </button>
+                    <button id="btn-backup-template-gdrive" class="btn-action-secondary" style="padding:9px 16px; font-size:0.9rem; border:1px solid #4285F4; color:#4285F4; cursor:pointer;">
+                        <i class="fab fa-google-drive"></i> پاشەکەوت لە Google Drive
+                    </button>
+                    <button id="btn-reset-ai-template" class="btn-cancel" style="padding:9px 16px; font-size:0.9rem;">
+                        <i class="fas fa-undo"></i> بنەڕەت (Reset)
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+                <!-- Controls Column -->
+                <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:14px; padding:20px; box-shadow:0 4px 15px var(--shadow-color); text-align:right;">
+                    <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1rem; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                        <i class="fas fa-sliders-h" style="color:var(--blue-accent);"></i> تایبەتمەندی و ڕەنگەکانی قالب
+                    </h3>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+                        <div class="form-group" style="text-align:right;">
+                            <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">ڕەنگی سەرەکی (Primary)</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <input type="color" id="tpl-primary-color" value="#00b4d8" style="width:42px; height:38px; border:none; border-radius:6px; cursor:pointer;">
+                                <input type="text" id="tpl-primary-text" value="#00b4d8" style="flex:1; padding:7px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:monospace; direction:ltr;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="text-align:right;">
+                            <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">ڕەنگی دووەم (Accent)</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <input type="color" id="tpl-accent-color" value="#7209b7" style="width:42px; height:38px; border:none; border-radius:6px; cursor:pointer;">
+                                <input type="text" id="tpl-accent-text" value="#7209b7" style="flex:1; padding:7px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:monospace; direction:ltr;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+                        <div class="form-group" style="text-align:right;">
+                            <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">پاشبنەمای سلاید (Slide Canvas)</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <input type="color" id="tpl-slide-bg-color" value="#131b2e" style="width:42px; height:38px; border:none; border-radius:6px; cursor:pointer;">
+                                <input type="text" id="tpl-slide-bg-text" value="#131b2e" style="flex:1; padding:7px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:monospace; direction:ltr;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="text-align:right;">
+                            <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">پاشبنەمای دەرەکی (Page Background)</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <input type="color" id="tpl-page-bg-color" value="#0a0f1d" style="width:42px; height:38px; border:none; border-radius:6px; cursor:pointer;">
+                                <input type="text" id="tpl-page-bg-text" value="#0a0f1d" style="flex:1; padding:7px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:monospace; direction:ltr;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align:right; margin-bottom:15px;">
+                        <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">دەقی مارکە و ژێرنووس (Watermark Branding)</label>
+                        <input type="text" id="tpl-branding-text" value="ماڵپەرێ فەرمی یێ مامۆستایان - وانە و پوختەیا پاوەرپۆینت" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                    </div>
+
+                    <div class="form-group" style="text-align:right; margin-bottom:15px;">
+                        <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:6px;">ڕێنمایی گشتی Gemini AI بۆ هەموو مامۆستایان (System Prompt)</label>
+                        <textarea id="tpl-system-prompt" rows="4" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit; font-size:0.88rem; line-height:1.5;">تۆ مامۆستایەکی شارەزای پرۆگرامی پەروەردەی هەرێمی کوردستانی. وانەکان بە شێوازی سلایدی پاوەرپۆینتی پێشکەوتوو بە زمانی کوردی بە ڕوونی، خاڵبەندی جوان، پێناسە، یاسا و نموونە ئامادە بکە.</textarea>
+                    </div>
+
+                    <button id="btn-update-preview" class="btn-action-primary" style="width:100%; justify-content:center; padding:10px; font-size:0.9rem;">
+                        <i class="fas fa-eye"></i> نوێکردنەوەی پێشبینینی ڕاستەوخۆ
+                    </button>
+                </div>
+
+                <!-- Preview Column -->
+                <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:14px; padding:20px; box-shadow:0 4px 15px var(--shadow-color);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h3 style="margin:0; font-size:1.1rem;">
+                            <i class="fas fa-desktop" style="color:#28a745;"></i> پێشبینینی قالبی پاوەرپۆینتی مامۆستایان
+                        </h3>
+                        <span id="tpl-save-status" style="font-size:0.8rem; color:#28a745; display:none;">
+                            <i class="fas fa-check-circle"></i> پاشەکەوتکرا
+                        </span>
+                    </div>
+
+                    <div style="border-radius:12px; overflow:hidden; border:1px solid var(--border-color); height:460px; background:#0a0f1d;">
+                        <iframe id="template-live-preview-frame" style="width:100%; height:100%; border:none; background:#0a0f1d;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN UNIVERSAL DOCUMENT VIEWER MODAL -->
+    <div id="doc-viewer-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:9999; padding:15px;">
+        <div style="background:var(--surface-color); border-radius:16px; overflow:hidden; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--border-color); background:var(--surface-color); text-align:right;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span id="doc-modal-format-badge" class="format-badge pdf" style="padding:4px 10px; border-radius:8px; font-weight:bold; font-size:0.8rem; background:rgba(0,123,255,0.1); color:var(--blue-accent);">PDF</span>
+                    <h4 id="doc-modal-title" style="margin:0; font-size:1.1rem;">پێشبینینی مەلزەمە لەلایەن ئەدمین</h4>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <a id="doc-modal-download-btn" href="#" download class="btn-save" style="padding:6px 14px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fas fa-download"></i> داگرتن
+                    </a>
+                    <button id="close-doc-btn" class="btn-cancel" style="padding:4px 10px; font-size:1.1rem; border-radius:50%;">&times;</button>
+                </div>
+            </div>
+            <div id="doc-viewer-viewport" style="flex:1; width:100%; height:75vh; overflow:auto; display:flex; align-items:center; justify-content:center; background:#1e1e1e; padding:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="educational-data.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="google-drive-integration.js"></script>
+    <script src="admin-panel-script.js"></script>
+</body>
+</html>

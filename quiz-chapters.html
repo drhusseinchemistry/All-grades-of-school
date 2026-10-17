@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پسیارێن هەلبژارتن - بەش</title>
+    <link rel="stylesheet" href="quiz.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="page-controls">
+             <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+        </div>
+        <div class="title-container">
+            <h1 id="page-title">بەشێن پەرتووکێ</h1>
+        </div>
+        <p>تاقیکرنەکێ هەلبژێرە دا دەست ب پسیاران بکەی</p>
+
+        <div id="chapters-grid" class="chapters-grid">
+        </div>
+        
+        <a href="pol.html" id="back-link" class="back-link">زڤرین</a>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">زێدەکرنا تاقیکرنەکا نوو</h2>
+            <form id="add-form">
+                <input type="hidden" id="chapter-id">
+                <div class="form-group">
+                    <label for="chapter-title">ناڤونیشان</label>
+                    <input type="text" id="chapter-title" required placeholder="بۆ نموونە: تاقیکرنا بەشێ ئێکێ">
+                </div>
+                <div class="form-group">
+                    <label for="chapter-color">ڕەنگ</label>
+                    <select id="chapter-color">
+                        <option value="blue">شین</option>
+                        <option value="purple">بنەفشی</option>
+                        <option value="green">کەسک</option>
+                        <option value="orange"> پرتەقاڵی</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="chapter-size">قەبارە (حەجم)</label>
+                    <select id="chapter-size">
+                        <option value="normal">نورمال</option>
+                        <option value="large">مەزن</option>
+                        <option value="small">بچووک</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">پاشکەفتن</button>
+                    <button type="button" id="modalCloseBtn" class="btn-cancel">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="quiz-chapters-script.js"></script>
+
+</body>
+</html>

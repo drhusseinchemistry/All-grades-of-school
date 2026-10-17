@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>پەرتووک</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333333">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="wenastyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <!-- ===== BEŞÊ GUHERTÎ (HEMÎ SKRÎPTÊN FIREBASE BI RÊZA RAST HATIN VEGUHESTIN) ===== -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <!-- ===== DAWÎYA BEŞÊ GUHERTÎ ===== -->
+</head>
+<body class="book-body secure-content">
+    <div id="eye-protection-overlay"></div>
+    <div id="screenshot-overlay">
+        <p>Ji bo parastinê, naverok veşartî ye.</p>
+    </div>
+    <div id="book-container">
+        <div id="left-tap-area"></div>
+
+        <div id="top-controls">
+            <button id="prev-page-btn" class="nav-btn" title="پەرێ بەری نوکە">&#10094;</button>
+            <div id="search-container">
+                <form id="search-form">
+                    <input type="search" id="search-input" placeholder="گەڕان ب ژمارێ یان نڤیسینێ...">
+                    <button type="submit">بگەڕێ</button>
+                </form>
+            </div>
+            <button id="next-page-btn" class="nav-btn" title="پەرێ دیڤدا">&#10095;</button>
+            <button id="more-options-btn" class="nav-btn" title="Vebijarkên Zêdetir"></button>
+            <div id="more-options-menu">
+                <button id="pdf-theme-btn" class="nav-btn" title="Guhertina Rengê (Parastina Rengan)"></button>
+                <button id="monochrome-theme-btn" class="nav-btn" title="Guhertina Rengê (Reş û Spî)"></button>
+                <button id="eye-care-btn" class="nav-btn" title="Parastina Çavan"></button>
+                <button id="fullscreen-btn" class="nav-btn" title="شاشا تەمام"></button>
+                <button id="install-pwa-btn" class="nav-btn" title="ئەپی دابەزîne"></button>
+            </div>
+        </div>
+        
+        <div id="book-view">
+            <p class="loading-text">ل هیڤییا بلندبوونا وێنەیan...</p>
+        </div>
+    </div>
+    
+    <!-- **** GUHERTINA NÛ: Ev beş êdî bi tevahî tê veşartin **** -->
+    <div id="external-link-overlay" style="display: none !important;">
+        <div class="external-link-content">
+            <h2><i class="fas fa-rocket"></i> AI Studio</h2>
+            <p>Ji ber sedemên ewlehiyê, ev amûr divê di rûpelek nû de vebe.</p>
+            <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro" target="_blank" id="open-external-link-btn">AI Studio Vek_e</a>
+            <div class="overlay-close-hint">
+                <i class="fas fa-arrow-left"></i> Ji bo veşartinê ber bi çepê ve bikişîne
+            </div>
+        </div>
+    </div>
+
+    <!-- Skrîptên din ên ku piştî barkirina rûpelê dixebitin -->
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+    <script src="book.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); }); }
+    </script>
+    
+    <!-- START: KODA NÛ JI BO IFRRAME OVERLAYS -->
+    <div id="iframe-overlay-container" class="iframe-overlay">
+        <button class="close-iframe-btn">&times;</button>
+        <iframe id="tool-iframe" src="" frameborder="0"></iframe>
+    </div>
+
+    <style>
+        .iframe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 10005;
+            display: none;
+            flex-direction: column;
+            animation: fadeInOverlay 0.3s ease-in-out;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .iframe-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #e9e9e9;
+        }
+        .close-iframe-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(40, 40, 40, 0.7);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10006;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</body>
+</html>

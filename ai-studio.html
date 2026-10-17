@@ -1,0 +1,77 @@
+<!-- START OF FILE: ai-studio.html -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .ai-studio-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .ai-studio-container .icon {
+            font-size: 5rem;
+            color: var(--blue-accent);
+            margin-bottom: 20px;
+        }
+        .ai-studio-container h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .ai-studio-container p {
+            font-size: 1.1em;
+            color: var(--secondary-text);
+            line-height: 1.7;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
+        }
+        .ai-studio-container .btn-primary {
+            display: inline-block;
+            background-color: var(--green-accent);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .ai-studio-container .btn-primary:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+         .back-link-ai {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--secondary-text);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ai-studio-container">
+            <i class="fas fa-robot icon"></i>
+            <h1>AI Assistant</h1>
+            <p>
+                تو نۆکە دێ بۆ ئامرازەکێ زیرەکیا دەستکرد یا دەرڤەیی ڤەگوهازر بی. ئەڤە دێ د پەنچەرەکا نوو دا ڤەبیت دا کو تو بشێی ب ئاسانی بزڤریە ڤێرێ.
+            </p>
+            <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro" target="_blank" class="btn-primary">
+                <i class="fas fa-external-link-alt"></i> AI Assistant ڤەکە
+            </a>
+            <a href="index.html" class="back-link-ai">زڤرین بۆ هەلبژارتنا پولان</a>
+        </div>
+    </div>
+
+    <!-- Firebase and Auth Guard Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+</body>
+</html>
+<!-- END OF FILE: ai-studio.html -->

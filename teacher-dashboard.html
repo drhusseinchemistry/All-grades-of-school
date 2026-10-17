@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پەناڵی مامۆستایان | کۆنترۆڵ و بەلاڤکرن</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .dashboard-container {
+            width: 100%;
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+        .teacher-badge {
+            background: linear-gradient(135deg, rgba(0,123,255,0.15), rgba(138,43,226,0.15));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .teacher-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: right;
+        }
+        .teacher-avatar-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 3px solid var(--blue-accent);
+            object-fit: cover;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--blue-accent);
+            margin: 5px 0;
+        }
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+        }
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .d-tab {
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--primary-text);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .d-tab.active {
+            background-color: var(--blue-accent);
+            color: #ffffff;
+            border-color: var(--blue-accent);
+        }
+        .tab-pane {
+            display: none;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .notice-banner {
+            background: rgba(255, 193, 7, 0.15);
+            border-right: 4px solid #ffc107;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .submission-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            text-align: right;
+            transition: transform 0.2s;
+        }
+        .submission-card:hover {
+            transform: translateY(-2px);
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ff9800;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+        .status-approved {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        /* Format selector cards in malzama upload */
+        .format-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .format-card-btn {
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--primary-text);
+        }
+        .format-card-btn:hover {
+            border-color: var(--blue-accent);
+        }
+        .format-card-btn.active {
+            border-color: var(--blue-accent);
+            background: rgba(0,123,255,0.08);
+            font-weight: bold;
+        }
+        .format-card-btn i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(0,0,0,0.01);
+            margin-bottom: 15px;
+        }
+        .upload-dropzone:hover {
+            border-color: var(--blue-accent);
+            background: rgba(0,123,255,0.03);
+        }
+        .format-badge {
+            font-size: 0.78rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .format-badge.pptx {
+            background: rgba(216, 59, 1, 0.12);
+            color: #d83b01;
+            border: 1px solid rgba(216, 59, 1, 0.25);
+        }
+        .format-badge.html {
+            background: rgba(0, 180, 216, 0.12);
+            color: #0077b6;
+            border: 1px solid rgba(0, 180, 216, 0.25);
+        }
+        .format-badge.image {
+            background: rgba(157, 78, 221, 0.12);
+            color: #7b2cbf;
+            border: 1px solid rgba(157, 78, 221, 0.25);
+        }
+        .format-badge.pdf {
+            background: rgba(40, 167, 69, 0.12);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.25);
+        }
+        .doc-viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 15px;
+        }
+        .doc-viewer-modal.open {
+            display: flex;
+        }
+        .doc-content-box {
+            background: var(--surface-color);
+            border-radius: 16px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .close-doc-btn {
+            background: rgba(0,0,0,0.4);
+            color: #ffffff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+        .close-doc-btn:hover {
+            background: #e63946;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Top Navigation -->
+        <div class="page-controls" style="margin-bottom: 20px;">
+            <a href="index.html" class="theme-toggle-button" title="زڤرین بۆ سەرەکی" style="text-decoration:none;">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="admin-panel.html" id="admin-hub-link" class="theme-toggle-button" title="پەناڵی ئەدمین" style="width:auto; padding: 0 15px; font-size:0.85rem; gap:6px; text-decoration:none; display:none; background:#e63946; color:#fff;">
+                <i class="fas fa-shield-alt"></i> پەناڵی ئەدمین (Super Admin)
+            </a>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <!-- Teacher Profile Card -->
+        <div class="teacher-badge">
+            <div class="teacher-info">
+                <img id="t-avatar-img" class="teacher-avatar-circle" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <h2 id="t-display-name" style="margin: 0; font-size: 1.4rem;">م. حسێن ئەکرەم زێباری</h2>
+                        <span id="super-admin-tag" style="background:#e63946; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:10px; display:none;">Super Admin</span>
+                        <span id="t-lang-tag" style="background:rgba(0,123,255,0.15); color:var(--blue-accent); font-size:0.75rem; padding:2px 8px; border-radius:10px;">باهدینی</span>
+                    </div>
+                    <p id="t-display-subject" style="margin: 4px 0 0; color: var(--blue-accent); font-size: 0.95rem;">کیمیا (Chemistry)</p>
+                    <p id="t-display-grades" style="margin: 3px 0 0; color: var(--secondary-text); font-size: 0.85rem;">پۆلەکانی وانەگۆتن: ١٠، ١١، ١٢</p>
+                </div>
+            </div>
+            <div>
+                <button id="edit-teacher-profile-btn" class="btn-save" style="padding: 8px 16px; font-size: 0.9rem;">
+                    <i class="fas fa-user-edit"></i> گوهۆرینا پڕۆفایل
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-eye" style="color: #007bff; font-size: 1.3rem;"></i>
+                <div class="number" id="stat-views">0</div>
+                <div class="label">تێکڕایا بینینێن قوتابیان</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-video" style="color: #28a745; font-size: 1.3rem;"></i>
+                <div class="number" id="stat-videos">0</div>
+                <div class="label">ڤیدیۆیێن یوتیوبێ</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle" style="color: #8a2be2; font-size: 1.3rem;"></i>
+                <div class="number" id="stat-quizzes">0</div>
+                <div class="label">پرسیارێن هەڵبژارتن</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-book" style="color: #fd7e14; font-size: 1.3rem;"></i>
+                <div class="number" id="stat-malzamas">0</div>
+                <div class="label">مەلزەمە و کورتە</div>
+            </div>
+        </div>
+
+        <!-- Notice Banner -->
+        <div class="notice-banner">
+            <i class="fas fa-info-circle" style="font-size: 1.3rem; color: #ff9800;"></i>
+            <div>
+                <strong>سیستەمێ پەسەندکرنا ئەدمینی:</strong>
+                هەر ڤیدیۆ، پرسیار، یان مەلزەمەیەک کو تۆ ئەپلود دکەی، ڕاستەوخۆ دچیتە ل هیڤیا پەسەندکرنا ئەدمینی گشتی (م. حسێن). تەنێ پشتی پەسەندکرنێ دێ چیتە بەشێ گشتی یێ قوتابیان.
+            </div>
+        </div>
+
+        <!-- Dashboard Action Tabs -->
+        <div class="dashboard-tabs">
+            <button class="d-tab active" data-tab="tab-ai-generator" style="background: linear-gradient(135deg, rgba(0,180,216,0.18), rgba(114,9,183,0.18)); border-color: #00b4d8; font-weight: bold;">
+                <i class="fas fa-magic" style="color:#00b4d8;"></i> هاریکارێ زیرەکێ Gemini بو مامۆستایان (AI Studio)
+            </button>
+            <button class="d-tab" data-tab="tab-add-malzama">
+                <i class="fas fa-file-upload" style="color:#28a745;"></i> زیادکرنا مەلزەمە / پاوەرپوینت / HTML
+            </button>
+            <button class="d-tab" data-tab="tab-add-video">
+                <i class="fab fa-youtube" style="color:#ff0000;"></i> زیادکرنا ڤیدیۆیا یوتیوبێ
+            </button>
+            <button class="d-tab" data-tab="tab-add-quiz">
+                <i class="fas fa-question-circle" style="color:#007bff;"></i> چێکرنا پرسیارێن هەڵبژارتن
+            </button>
+            <button class="d-tab" data-tab="tab-my-items">
+                <i class="fas fa-folder-open" style="color:#fd7e14;"></i> بابەتێن من (<span id="total-my-items">0</span>)
+            </button>
+            <button class="d-tab" data-tab="tab-gdrive" style="border-color:#4285F4; color:#4285F4;">
+                <i class="fab fa-google-drive" style="color:#4285F4;"></i> گووگڵ درایڤ (Google Drive)
+            </button>
+        </div>
+
+        <!-- TAB 0: GEMINI AI STUDIO (POWERPOINT SLIDES & MODERN QUIZZES GENERATOR) -->
+        <div id="tab-ai-generator" class="tab-pane active">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
+                <div>
+                    <h3 style="margin:0 0 5px; font-size:1.35rem; display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-magic" style="color:#00b4d8;"></i> هاریکارێ زیرەکێ Gemini بو مامۆستایان (AI Studio)
+                    </h3>
+                    <p style="margin:0; font-size:0.88rem; color:var(--secondary-text);">
+                        وێنەیەک، فایلی وۆرد یان PDF ئەپلود بکە، Gemini ڕاستەوخۆ پەڕەی HTML بە شێوازی پاوەرپۆینتی ئەنیمەیشنکراو و پرسیاری مۆدێرنی هەڵبژاردنت بۆ دروست دەکات.
+                    </p>
+                </div>
+                <span style="background:rgba(0,180,216,0.15); color:#00b4d8; font-size:0.8rem; font-weight:bold; padding:4px 12px; border-radius:20px; border:1px solid rgba(0,180,216,0.3);">
+                    <i class="fas fa-bolt"></i> مۆدێلی ژیریی دەستکرد: Gemini 3.8 Flash
+                </span>
+            </div>
+
+            <form id="ai-generator-form">
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>قۆناغ و پۆل</label>
+                        <select id="ai-grade" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>بابەت (Subject)</label>
+                        <select id="ai-subject" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="کیمیا" selected>کیمیا (Chemistry)</option>
+                            <option value="فیزیا">فیزیا (Physics)</option>
+                            <option value="زیندەوەر">زیندەوەر (Biology)</option>
+                            <option value="بیرکاری">بیرکاری (Mathematics)</option>
+                            <option value="عەرەبی">عەرەبی (Arabic)</option>
+                            <option value="کوردی">کوردی (Kurdish)</option>
+                            <option value="ئاین">ئاین (Islamic Education)</option>
+                            <option value="ئینگلێزی">ئینگلێزی (English)</option>
+                            <option value="کۆمپیوتەر">کۆمپیوتەر (Computer)</option>
+                            <option value="زانست">زانست (Science)</option>
+                            <option value="کۆمەڵایەتی">کۆمەڵایەتی (Social)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>زمانێ وانێ</label>
+                        <select id="ai-lang" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="ku_ba" selected>باهدینی (بادینی)</option>
+                            <option value="ku_so">سۆرانی</option>
+                            <option value="ar">عەرەبی</option>
+                            <option value="en">English (ئینگلیزی)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>بەش یان بەند (Chapter / Topic)</label>
+                        <input type="text" id="ai-chapter" placeholder="بۆ نموونە: بەندێ ئێکێ - خەستییا گیراوەیان" required>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>ناڤونیشانێ وانەیێ (Lesson Title)</label>
+                        <input type="text" id="ai-title" placeholder="بۆ نموونە: پێناسە و یاسایێن خەستیێ و چەندین پرسیارێن گرنگ" required>
+                    </div>
+                </div>
+
+                <!-- File Upload / Dropzone for Image, Word, or PDF -->
+                <div class="form-group" style="text-align:right;">
+                    <label>ئەپلودکردنی وێنەی وانە، پەڕاوی Word، PDF یان نوسینی دەق:</label>
+                    <div class="upload-dropzone" id="ai-dropzone" style="border-color:#00b4d8; background:rgba(0,180,216,0.03);">
+                        <i class="fas fa-file-medical" style="font-size:2.4rem; color:#00b4d8; margin-bottom:8px;"></i>
+                        <h4 style="margin:0 0 5px;" id="ai-dropzone-text">وێنەیەک ئەپلود بکە، یان فایلی ورد / PDF هەڵبژێرە</h4>
+                        <p style="margin:0; font-size:0.82rem; color:var(--secondary-text);">دەتوانیت وێنەی دەفتەر، تێبینییەکانی مامۆستا، یان فایل ڕابکێشیتە ئێرە</p>
+                        <input type="file" id="ai-file-input" accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.txt" style="display:none;">
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; margin-top:8px; margin-bottom:12px;">
+                        <button type="button" id="btn-import-from-gdrive" class="btn-action-secondary" style="border:1px dashed #4285F4; color:#4285F4; padding:6px 14px; font-size:0.85rem; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                            <i class="fab fa-google-drive"></i> یان هاوردەکردنی فایل لە Google Drive
+                        </button>
+                    </div>
+                    <div id="ai-file-chosen-info" style="display:none; padding:10px 14px; background:rgba(0,180,216,0.12); border:1px solid rgba(0,180,216,0.3); border-radius:8px; color:var(--primary-text); margin-bottom:12px; font-size:0.9rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fas fa-check-circle" style="color:#00b4d8;"></i> <strong id="ai-file-name"></strong> (<span id="ai-file-size"></span>)</span>
+                            <button type="button" id="btn-remove-ai-file" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:0.9rem;"><i class="fas fa-times"></i> لابردن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textarea for Study Notes / Text directly -->
+                <div class="form-group" style="text-align:right;">
+                    <label>یان لێرە پوختە یان دەقی وانەکە بنووسە / کۆپی بکە (ئارەزوومەندانە):</label>
+                    <textarea id="ai-notes-text" rows="3" placeholder="دەتوانیت یاساکان، خاڵە گرنگەکان، یان پێناسەکان لێرە بنووسیت تاوەکو Gemini ڕاستەوخۆ بیکاتە پاوەرپۆینت..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit; font-size:0.88rem;"></textarea>
+                </div>
+
+                <!-- User specific requirement: How many questions & Teacher ideas -->
+                <div class="form-row" style="background:rgba(0,180,216,0.05); border:1px solid rgba(0,180,216,0.2); border-radius:12px; padding:16px; margin-bottom:20px;">
+                    <div class="form-group" style="text-align:right;">
+                        <label style="font-weight:bold; color:var(--primary-text); display:flex; align-items:center; gap:6px;">
+                            <i class="fas fa-question-circle" style="color:#00b4d8;"></i> چەند پرسیارێن هەڵبژارتن بۆتە چێکەم؟
+                        </label>
+                        <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+                            <input type="number" id="ai-questions-count" min="1" max="20" value="5" required style="width:90px; text-align:center; font-size:1.1rem; font-weight:bold; padding:8px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text);">
+                            <div style="display:flex; gap:6px;">
+                                <button type="button" class="btn-action-secondary btn-quick-qcount" data-count="3" style="padding:4px 10px; font-size:0.8rem;">٣ پرسیار</button>
+                                <button type="button" class="btn-action-secondary btn-quick-qcount active" data-count="5" style="padding:4px 10px; font-size:0.8rem; background:var(--blue-accent); color:#fff;">٥ پرسیار</button>
+                                <button type="button" class="btn-action-secondary btn-quick-qcount" data-count="10" style="padding:4px 10px; font-size:0.8rem;">١٠ پرسیار</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align:right;">
+                        <label style="font-weight:bold; color:var(--primary-text); display:flex; align-items:center; gap:6px;">
+                            <i class="fas fa-lightbulb" style="color:#ffc107;"></i> تە چ هزرهەنە یان ئەز چێکەم؟
+                        </label>
+                        <input type="text" id="ai-teacher-ideas" placeholder="بۆ نموونە: جەخت لەسەر یاساکان بکە و چەند پرسیاری وزاری دابنێ..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit; font-size:0.88rem; margin-top:6px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-top:6px; font-size:0.8rem; color:var(--secondary-text);">
+                            <input type="checkbox" id="ai-auto-ideas-check" checked style="cursor:pointer;">
+                            <label for="ai-auto-ideas-check" style="cursor:pointer;">بە ڕای ژیریی دەستکرد (Gemini Auto) خۆی گرنگترین خاڵ و پرسیارەکان دەردەهێنێت</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="btn-submit-ai" class="btn-save" style="width:100%; padding:14px; background:linear-gradient(135deg, #00b4d8, #7209b7); font-size:1.08rem; font-weight:bold; box-shadow:0 6px 20px rgba(0,180,216,0.35);">
+                        <i class="fas fa-magic"></i> دروستکردنی پاوەرپۆینت و پرسیارەکان بە ژیریی دەستکرد (Gemini AI)
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading Spinner & Live Status Box -->
+            <div id="ai-loading-box" style="display:none; text-align:center; padding:35px 20px; background:rgba(0,180,216,0.06); border:1px dashed #00b4d8; border-radius:14px; margin-top:25px;">
+                <div style="display:inline-block; position:relative; width:60px; height:60px; margin-bottom:15px;">
+                    <i class="fas fa-atom fa-spin" style="font-size:3.5rem; color:#00b4d8;"></i>
+                </div>
+                <h3 style="margin:0 0 8px; font-size:1.2rem; color:var(--primary-text);" id="ai-loading-status-text">
+                    شیکارکردنی فایل و دەقی وانەکە لەلایەن Gemini...
+                </h3>
+                <p style="margin:0; font-size:0.88rem; color:var(--secondary-text);">
+                    تکایە چاوەڕوان بە، پاوەرپۆینتێکی ئینتەرئەکتیڤی HTML بە دیزاینی سەرەکی ئەدمین و پرسیارەکان دروست دەکرێن...
+                </p>
+            </div>
+
+            <!-- Generated Output Container -->
+            <div id="ai-result-box" style="display:none; margin-top:25px; border-top:2px solid var(--border-color); padding-top:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+                    <div>
+                        <span style="background:rgba(40,167,69,0.15); color:#28a745; font-size:0.8rem; font-weight:bold; padding:4px 10px; border-radius:8px;">
+                            <i class="fas fa-check-circle"></i> بە سەرکەوتوویی دروستکرا
+                        </span>
+                        <h3 id="ai-result-title" style="margin:8px 0 3px; font-size:1.25rem;">ناونیشانی وانە</h3>
+                        <p id="ai-result-meta" style="margin:0; font-size:0.85rem; color:var(--secondary-text);">پۆل و بابەت</p>
+                    </div>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button id="btn-save-ai-both" class="btn-save" style="background:#28a745; padding:8px 16px; font-size:0.9rem;">
+                            <i class="fas fa-cloud-upload-alt"></i> بڵاوکردنەوەی هەردووکیان پێکەوە (پاوەرپۆینت + پرسیار)
+                        </button>
+                        <button id="btn-save-ai-presentation-only" class="btn-action-primary" style="padding:8px 14px; font-size:0.85rem;">
+                            <i class="fas fa-file-powerpoint"></i> پاشەکەوت تەنها وەک مەلزەمە
+                        </button>
+                        <button id="btn-save-ai-quizzes-only" class="btn-action-secondary" style="padding:8px 14px; font-size:0.85rem;">
+                            <i class="fas fa-question-circle"></i> پاشەکەوت تەنها وەک پرسیار
+                        </button>
+                        <button id="btn-save-ai-gdrive" class="btn-action-secondary" style="padding:8px 14px; font-size:0.85rem; border-color:#4285F4; color:#4285F4;">
+                            <i class="fab fa-google-drive"></i> پاشەکەوت لە Google Drive
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-tabs for Previewing PowerPoint vs Quizzes -->
+                <div style="display:flex; gap:10px; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
+                    <button class="btn-action-primary ai-view-tab active" data-view="view-ppt" style="padding:6px 14px; font-size:0.88rem;">
+                        <i class="fas fa-file-powerpoint"></i> پێشبینینی پاوەرپۆینتی HTML
+                    </button>
+                    <button class="btn-action-secondary ai-view-tab" data-view="view-quizzes" style="padding:6px 14px; font-size:0.88rem;">
+                        <i class="fas fa-tasks"></i> پرسیارە مۆدێرنەکان (<span id="ai-quizzes-count-badge">0</span>)
+                    </button>
+                </div>
+
+                <!-- View 1: HTML PowerPoint Viewer -->
+                <div id="ai-view-ppt" style="display:block;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-size:0.85rem; color:var(--secondary-text);">
+                            <i class="fas fa-info-circle" style="color:var(--blue-accent);"></i> دشێی ڕاستەوخۆ دەستکاری سلایدەکان بکەی بە کلیک لەسەر دوگمەی "دەستکاری" لەسەرەوەی سلایدەکە
+                        </span>
+                        <div style="display:flex; gap:8px;">
+                            <button id="btn-save-ppt-gdrive-direct" class="btn-action-secondary" style="padding:5px 12px; font-size:0.82rem; border-color:#4285F4; color:#4285F4;">
+                                <i class="fab fa-google-drive"></i> ناردن بۆ Drive
+                            </button>
+                            <button id="btn-download-ppt-html" class="btn-action-secondary" style="padding:5px 12px; font-size:0.82rem;">
+                                <i class="fas fa-download"></i> داگرتنی فایلی HTML
+                            </button>
+                            <button id="btn-fullscreen-ppt" class="btn-action-secondary" style="padding:5px 12px; font-size:0.82rem;">
+                                <i class="fas fa-expand"></i> ڤەکرنا شاشەیا تەواو
+                            </button>
+                        </div>
+                    </div>
+                    <div style="border-radius:14px; overflow:hidden; border:1px solid var(--border-color); height:540px; background:#0a0f1d; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+                        <iframe id="ai-presentation-iframe" style="width:100%; height:100%; border:none; background:#0a0f1d;"></iframe>
+                    </div>
+                </div>
+
+                <!-- View 2: Generated Quizzes Cards -->
+                <div id="ai-view-quizzes" style="display:none;">
+                    <div id="ai-quizzes-cards-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:15px;">
+                        <!-- Quizzes rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1: ADD MALZAMA (PPTX, HTML, IMAGE, PDF) -->
+        <div id="tab-add-malzama" class="tab-pane">
+            <h3 style="margin-top:0; margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-file-alt" style="color:#28a745;"></i> زیادکرنا مەلزەمە، پاوەرپوینت، پەڕەی HTML یان وێنە
+            </h3>
+            <p style="margin:0 0 20px; font-size:0.88rem; color:var(--secondary-text); text-align:right;">
+                دەتوانیت فایلی پاوەرپوینت (.pptx)، پەڕەی ئینتەرئەکتیڤ (.html)، وێنەی هێڵکاری، یان پەڕاوی PDF ڕاستەوخۆ ئەپلود بکەیت تا قوتابیان بە ڕێکی بیبینن.
+            </p>
+
+            <form id="add-malzama-form">
+                <!-- Format Selector Buttons -->
+                <label style="font-weight:bold; display:block; margin-bottom:8px; text-align:right;">جۆری فایلەکە هەڵبژێرە:</label>
+                <div class="format-select-grid">
+                    <button type="button" class="format-card-btn active" data-format="pdf">
+                        <i class="fas fa-file-pdf" style="color:#28a745;"></i>
+                        <span>پەڕاوی PDF</span>
+                    </button>
+                    <button type="button" class="format-card-btn" data-format="pptx">
+                        <i class="fas fa-file-powerpoint" style="color:#d83b01;"></i>
+                        <span>پاوەرپوینت PPTX</span>
+                    </button>
+                    <button type="button" class="format-card-btn" data-format="html">
+                        <i class="fas fa-file-code" style="color:#0077b6;"></i>
+                        <span>پەڕەی HTML</span>
+                    </button>
+                    <button type="button" class="format-card-btn" data-format="image">
+                        <i class="fas fa-file-image" style="color:#7b2cbf;"></i>
+                        <span>وێنە / دیاگرام</span>
+                    </button>
+                </div>
+                <input type="hidden" id="selected-malzama-format" value="pdf">
+
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>قۆناغ و پۆل</label>
+                        <select id="malzama-grade" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>بابەت (Subject)</label>
+                        <select id="malzama-subject" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="کیمیا" selected>کیمیا (Chemistry)</option>
+                            <option value="فیزیا">فیزیا (Physics)</option>
+                            <option value="زیندەوەر">زیندەوەر (Biology)</option>
+                            <option value="بیرکاری">بیرکاری (Mathematics)</option>
+                            <option value="عەرەبی">عەرەبی (Arabic)</option>
+                            <option value="کوردی">کوردی (Kurdish)</option>
+                            <option value="ئاین">ئاین (Islamic Education)</option>
+                            <option value="ئینگلێزی">ئینگلێزی (English)</option>
+                            <option value="کۆمپیوتەر">کۆمپیوتەر (Computer)</option>
+                            <option value="زانست">زانست (Science)</option>
+                            <option value="کۆمەڵایەتی">کۆمەڵایەتی (Social)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>زمانێ بابەتێ</label>
+                        <select id="malzama-lang" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="ku_ba" selected>باهدینی</option>
+                            <option value="ku_so">سۆرانی</option>
+                            <option value="ar">عەرەبی</option>
+                            <option value="en">English (ئینگلیزی)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>بەش یان بەند</label>
+                        <input type="text" id="malzama-chapter" placeholder="بۆ نموونە: پوختەیا کیمیایا پۆلا ١٢" required>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>ناڤونیشانێ مەلزەمەیێ</label>
+                        <input type="text" id="malzama-title" placeholder="بۆ نموونە: کورتە و یاسایێن کیمیایێ" required>
+                    </div>
+                </div>
+
+                <!-- File Upload / Link Area -->
+                <div class="form-group" style="text-align:right;">
+                    <label>ئەپلودکردنی فایل لە ئامێرەکەت (یان بەستەری فایل)</label>
+                    <div class="upload-dropzone" id="file-dropzone">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:2.5rem; color:var(--blue-accent); margin-bottom:10px;"></i>
+                        <h4 style="margin:0 0 5px;" id="dropzone-text">کلیک بکە بۆ هەڵبژاردنی فایل (PDF, PPTX, HTML, وێنە)</h4>
+                        <p style="margin:0; font-size:0.8rem; color:var(--secondary-text);" id="dropzone-sub">قەبارەی پەسەندکراو: تا ٢٠ مێگابایت</p>
+                        <input type="file" id="malzama-file-input" accept=".pdf,.ppt,.pptx,.html,.htm,.png,.jpg,.jpeg,.webp" style="display:none;">
+                    </div>
+                    <div id="file-chosen-info" style="display:none; padding:10px 14px; background:rgba(40,167,69,0.1); border-radius:8px; color:#28a745; margin-bottom:12px; font-size:0.9rem;">
+                        <i class="fas fa-check-circle"></i> <strong id="chosen-file-name"></strong> (<span id="chosen-file-size"></span>)
+                    </div>
+                </div>
+
+                <div class="form-group" style="text-align:right;">
+                    <label>یان لینکا ڕاستەوخۆ (Google Drive, Dropbox, OneDrive)</label>
+                    <input type="url" id="malzama-url" placeholder="https://drive.google.com/file/d/...">
+                    <small style="color:var(--secondary-text);">ئەگەر فایلەکەت لە گووگڵ درایڤە یان لینکی هەیە دەتوانیت لێرە بیلکێنیت.</small>
+                </div>
+
+                <!-- Optional HTML Code Textarea (Appears when HTML format selected) -->
+                <div class="form-group" id="html-code-group" style="text-align:right; display:none;">
+                    <label>یان نوسینی کۆدی ڕاستەوخۆی HTML (کۆد و ستایل)</label>
+                    <textarea id="malzama-html-code" rows="5" placeholder="<h2>ناونیشانی وانە</h2><p>پوختەی وانەکە لێرە بنووسە...</p>" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:monospace; direction:ltr; text-align:left;"></textarea>
+                </div>
+
+                <div class="form-group" style="text-align:right;">
+                    <label>کورتەیەک دەربارەی مەلزەمەیێ</label>
+                    <textarea id="malzama-desc" rows="2" placeholder="تێبینی دەربارەی مەلزەمەیێ بنڤیسە..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;"></textarea>
+                </div>
+
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn-save" style="width:100%; padding:12px;">
+                        <i class="fas fa-paperclip"></i> ناردن بۆ پێداچوونەوە و پەسەندکرنێ
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 2: ADD YOUTUBE VIDEO -->
+        <div id="tab-add-video" class="tab-pane">
+            <h3 style="margin-top:0; margin-bottom: 20px; display:flex; align-items:center; gap:8px;">
+                <i class="fab fa-youtube" style="color:#ff0000;"></i> زیادکرنا وانەکا نوو یا یوتیوبێ
+            </h3>
+            <form id="add-video-form">
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>قۆناغ و پۆل</label>
+                        <select id="video-grade" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>بابەت (Subject)</label>
+                        <select id="video-subject" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="کیمیا" selected>کیمیا (Chemistry)</option>
+                            <option value="فیزیا">فیزیا (Physics)</option>
+                            <option value="زیندەوەر">زیندەوەر (Biology)</option>
+                            <option value="بیرکاری">بیرکاری (Mathematics)</option>
+                            <option value="عەرەبی">عەرەبی (Arabic)</option>
+                            <option value="کوردی">کوردی (Kurdish)</option>
+                            <option value="ئاین">ئاین (Islamic Education)</option>
+                            <option value="ئینگلێزی">ئینگلێزی (English)</option>
+                            <option value="کۆمپیوتەر">کۆمپیوتەر (Computer)</option>
+                            <option value="زانست">زانست (Science)</option>
+                            <option value="کۆمەڵایەتی">کۆمەڵایەتی (Social)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>زمانێ وانێ</label>
+                        <select id="video-lang" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="ku_ba" selected>باهدینی</option>
+                            <option value="ku_so">سۆرانی</option>
+                            <option value="ar">عەرەبی</option>
+                            <option value="en">English (ئینگلیزی)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>بەش یان بەند</label>
+                        <input type="text" id="video-chapter" placeholder="بۆ نموونە: بەندی ١: تێکڕایێ کارلێکی" required>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>ناڤونیشانێ وانێ</label>
+                        <input type="text" id="video-title" placeholder="بۆ نموونە: وانا ١: دەستپێک لسەر بەندی ئێکێ" required>
+                    </div>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>لینکا یوتیوبێ (YouTube Video URL)</label>
+                    <input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=..." required>
+                    <small style="color:var(--secondary-text);">دشێی لینکا ئاسایی یان لینکا کۆرت یا youtu.be بنڤیسی.</small>
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn-save" style="width:100%; padding:12px;">
+                        <i class="fas fa-upload"></i> ناردن بۆ پێداچوون و پەسەندکرنێ
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 3: ADD QUIZ QUESTION -->
+        <div id="tab-add-quiz" class="tab-pane">
+            <h3 style="margin-top:0; margin-bottom: 20px; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-question-circle" style="color:#007bff;"></i> چێکرنا پرسیارەکا نوو یا هەڵبژارتن (MCQ)
+            </h3>
+            <form id="add-quiz-form">
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>قۆناغ و پۆل</label>
+                        <select id="quiz-grade" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>بابەت (Subject)</label>
+                        <select id="quiz-subject" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="کیمیا" selected>کیمیا (Chemistry)</option>
+                            <option value="فیزیا">فیزیا (Physics)</option>
+                            <option value="زیندەوەر">زیندەوەر (Biology)</option>
+                            <option value="بیرکاری">بیرکاری (Mathematics)</option>
+                            <option value="عەرەبی">عەرەبی (Arabic)</option>
+                            <option value="کوردی">کوردی (Kurdish)</option>
+                            <option value="ئاین">ئاین (Islamic Education)</option>
+                            <option value="ئینگلێزی">ئینگلێزی (English)</option>
+                            <option value="کۆمپیوتەر">کۆمپیوتەر (Computer)</option>
+                            <option value="زانست">زانست (Science)</option>
+                            <option value="کۆمەڵایەتی">کۆمەڵایەتی (Social)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>زمانێ پرسیارێ</label>
+                        <select id="quiz-lang" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="ku_ba" selected>باهدینی</option>
+                            <option value="ku_so">سۆرانی</option>
+                            <option value="ar">عەرەبی</option>
+                            <option value="en">English (ئینگلیزی)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>بەند یان بابەت</label>
+                    <input type="text" id="quiz-chapter" placeholder="بۆ نموونە: بەندی ٢: هاوسەنگییا کیمیایی" required>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>دەقێ پرسیارێ (Question Text)</label>
+                    <textarea id="quiz-question" rows="3" placeholder="پرسیارا خۆ ل ڤێرە بنڤیسە..." required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>هەڵبژاردەی (A)</label>
+                        <input type="text" id="quiz-opt-0" placeholder="بەرسڤا A" required>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>هەڵبژاردەی (B)</label>
+                        <input type="text" id="quiz-opt-1" placeholder="بەرسڤا B" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label>هەڵبژاردەی (C)</label>
+                        <input type="text" id="quiz-opt-2" placeholder="بەرسڤا C" required>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>هەڵبژاردەی (D)</label>
+                        <input type="text" id="quiz-opt-3" placeholder="بەرسڤا D" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="text-align:right;">
+                        <label style="color:var(--green-accent); font-weight:bold;">هەڵبژاردەی دروست (Correct Answer)</label>
+                        <select id="quiz-correct-index" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                            <option value="0">هەڵبژاردەی (A) ڕاستە</option>
+                            <option value="1">هەڵبژاردەی (B) ڕاستە</option>
+                            <option value="2">هەڵبژاردەی (C) ڕاستە</option>
+                            <option value="3">هەڵبژاردەی (D) ڕاستە</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <label>تێبینی / ڕوونکردنەوەی وەڵام (ئارەزوومەندانە)</label>
+                        <input type="text" id="quiz-explanation" placeholder="بۆچی ئەڤ بەرسڤە دروستە؟">
+                    </div>
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn-save" style="width:100%; padding:12px;">
+                        <i class="fas fa-check"></i> تۆمارکرن و ناردن بۆ پەسەندکرنێ
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 4: MY ITEMS LIST -->
+        <div id="tab-my-items" class="tab-pane">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                <h3 style="margin:0;"><i class="fas fa-folder-open"></i> بابەتێن من یێن تۆمارکری</h3>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-lang-small filter-status-btn active" data-filter="all">هەمی</button>
+                    <button class="btn-lang-small filter-status-btn" data-filter="pending">ل چاڤەڕێیێ</button>
+                    <button class="btn-lang-small filter-status-btn" data-filter="approved">پەسەندکراو</button>
+                </div>
+            </div>
+            <div id="my-submissions-list">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- TAB 5: GOOGLE DRIVE INTEGRATION -->
+        <div id="tab-gdrive" class="tab-pane">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; border-bottom:1px solid var(--border-color); padding-bottom:14px;">
+                <div style="text-align:right;">
+                    <h3 style="margin:0 0 6px; font-size:1.3rem; display:flex; align-items:center; gap:8px;">
+                        <i class="fab fa-google-drive" style="color:#4285F4;"></i> گووگڵ درایڤ (Google Drive)
+                    </h3>
+                    <p style="margin:0; font-size:0.88rem; color:var(--secondary-text);">
+                        کەرەستە و فایلەکانی وانەکانت (PDF, وۆرد, پاوەرپۆینت, وێنە) ڕاستەوخۆ لە Google Drive هاوردە بکە یان مەلزەمەکان بنێرە بۆ Drive.
+                    </p>
+                </div>
+                <div id="gdrive-user-badge" style="display:none; align-items:center; gap:10px; background:rgba(66,133,244,0.1); border:1px solid rgba(66,133,244,0.3); padding:6px 14px; border-radius:30px;">
+                    <span id="gdrive-user-email" style="font-size:0.85rem; font-weight:600; color:var(--primary-text);"></span>
+                    <button id="gdrive-signout-btn" class="btn-action-secondary" style="padding:4px 10px; font-size:0.75rem; border-radius:15px; cursor:pointer;">دەرچوون</button>
+                </div>
+            </div>
+
+            <!-- Auth State: NOT Signed In -->
+            <div id="gdrive-login-prompt" style="text-align:center; padding:45px 20px; background:var(--surface-color); border:1px solid var(--border-color); border-radius:16px;">
+                <div style="width:70px; height:70px; border-radius:50%; background:rgba(66,133,244,0.1); color:#4285F4; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 16px;">
+                    <i class="fab fa-google-drive"></i>
+                </div>
+                <h3 style="margin:0 0 10px; font-size:1.25rem;">پەیوەستکردنی هەژماری Google Drive</h3>
+                <p style="margin:0 0 24px; color:var(--secondary-text); font-size:0.92rem; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.6;">
+                    دەستگەیشتن بە فایلەکانی گووگڵ درایڤ بە مۆڵەتی بەکارهێنەر بۆ ئەوەی بتوانیت پەڕاوی PDF، پاوەرپۆینت و وێنەکانت ڕاستەوخۆ بهێنیتە ناو ژیریی دەستکرد یان وەک مەلزەمە بڵاوی بکەیتەوە.
+                </p>
+
+                <!-- Official Sign in with Google Button -->
+                <button id="gdrive-login-btn" class="gsi-material-button">
+                    <div class="gsi-material-button-state"></div>
+                    <div class="gsi-material-button-content-wrapper">
+                        <div class="gsi-material-button-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
+                                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                                <path fill="none" d="M0 0h48v48H0z"></path>
+                            </svg>
+                        </div>
+                        <span class="gsi-material-button-contents">چوونەژوورەوە بە گووگڵ (Sign in with Google)</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Auth State: SIGNED IN VIEW -->
+            <div id="gdrive-files-manager" style="display:none;">
+                <!-- Toolbar: Search, Filters, Quick Upload -->
+                <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:12px; padding:14px; margin-bottom:18px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
+                        <i class="fas fa-search" style="color:var(--secondary-text);"></i>
+                        <input type="text" id="gdrive-search-input" placeholder="گەڕان بەدوای ناوی فایل لە Drive..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:transparent; color:var(--primary-text); font-family:inherit; font-size:0.88rem;">
+                    </div>
+                    
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn-lang-small gdrive-filter-btn active" data-filter="all">گشت فایلەکان</button>
+                        <button class="btn-lang-small gdrive-filter-btn" data-filter="pdf"><i class="fas fa-file-pdf" style="color:#ef4444;"></i> PDF</button>
+                        <button class="btn-lang-small gdrive-filter-btn" data-filter="slide"><i class="fas fa-file-powerpoint" style="color:#f59e0b;"></i> سلاید / PPT</button>
+                        <button class="btn-lang-small gdrive-filter-btn" data-filter="doc"><i class="fas fa-file-word" style="color:#3b82f6;"></i> دۆکیومێنت</button>
+                        <button class="btn-lang-small gdrive-filter-btn" data-filter="image"><i class="fas fa-file-image" style="color:#10b981;"></i> وێنە</button>
+                    </div>
+
+                    <div style="display:flex; gap:8px;">
+                        <button id="gdrive-refresh-btn" class="btn-action-secondary" style="padding:7px 12px; font-size:0.85rem;" title="نوێکردنەوە">
+                            <i class="fas fa-sync-alt"></i> نوێکردنەوە
+                        </button>
+                        <label class="btn-action-primary" style="padding:7px 14px; font-size:0.85rem; cursor:pointer; background:#4285F4; display:inline-flex; align-items:center; gap:6px;">
+                            <i class="fas fa-cloud-upload-alt"></i> ئەپلۆد بۆ Drive
+                            <input type="file" id="gdrive-quick-upload-input" style="display:none;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Status alert bar -->
+                <div id="gdrive-status-alert" style="display:none; padding:10px 16px; border-radius:8px; margin-bottom:14px; font-size:0.88rem;"></div>
+
+                <!-- Files list loading indicator -->
+                <div id="gdrive-files-loading" style="display:none; text-align:center; padding:35px; color:var(--secondary-text);">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color:#4285F4; margin-bottom:12px;"></i>
+                    <p style="margin:0; font-size:0.95rem;">بارکردنی فایلەکان لە Google Drive...</p>
+                </div>
+
+                <!-- Files list empty state -->
+                <div id="gdrive-files-empty" style="display:none; text-align:center; padding:40px 20px; background:var(--surface-color); border:1px dashed var(--border-color); border-radius:12px; color:var(--secondary-text);">
+                    <i class="fas fa-folder-open fa-2x" style="color:var(--secondary-text); margin-bottom:10px;"></i>
+                    <p style="margin:0;">هیچ فایلێک نەدۆزرایەوە لە Google Drive بەپێی ئەم گەڕانە.</p>
+                </div>
+
+                <!-- Files list container -->
+                <div id="gdrive-files-list" style="display:grid; grid-template-columns:1fr; gap:10px;">
+                    <!-- Dynamically populated files -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Profile Edit Modal -->
+    <div id="teacher-profile-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-header">گوهۆرینا پڕۆفایلێ مامۆستایی</h2>
+            <form id="teacher-profile-form">
+                <div class="form-group" style="text-align:right;">
+                    <label>ناڤێ سێ قۆڵی یێ مامۆستایی</label>
+                    <input type="text" id="prof-name" required>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>بابەت (وانە)</label>
+                    <input type="text" id="prof-subject" placeholder="کیمیا، فیزیا، بیرکاری..." required>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>زمانێ وانەگۆتنێ (Language / Dialect)</label>
+                    <select id="prof-lang" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;">
+                        <option value="ku_ba">باهدینی (Badini)</option>
+                        <option value="ku_so">سۆرانی (Sorani)</option>
+                        <option value="ar">عەرەبی (Arabic)</option>
+                        <option value="en">English (ئینگلیزی)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>ژمارا مۆبایلێ</label>
+                    <input type="tel" id="prof-phone">
+                </div>
+                <div class="form-group" style="text-align:right;">
+                    <label>کورتەیەک دەربارەی خۆ (بایۆ)</label>
+                    <textarea id="prof-bio" rows="2" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--surface-color); color:var(--primary-text); font-family:inherit;"></textarea>
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn-save">پاشکەفتن</button>
+                    <button type="button" id="close-profile-modal" class="btn-cancel">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DOCUMENT VIEWER MODAL IN DASHBOARD -->
+    <div id="doc-viewer-modal" class="doc-viewer-modal">
+        <div class="doc-content-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--border-color); background:var(--surface-color); text-align:right;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span id="doc-modal-format-badge" class="format-badge pdf"><i class="fas fa-file-pdf"></i> PDF</span>
+                    <h4 id="doc-modal-title" style="margin:0; font-size:1.1rem;">پێشبینینی مەلزەمە</h4>
+                </div>
+                <button class="close-doc-btn" id="close-doc-btn">&times;</button>
+            </div>
+            <div id="doc-viewer-viewport" style="flex:1; width:100%; height:75vh; overflow:auto; display:flex; align-items:center; justify-content:center; background:#1e1e1e; padding:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="educational-data.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="google-drive-integration.js"></script>
+    <script src="teacher-dashboard.js"></script>
+</body>
+</html>

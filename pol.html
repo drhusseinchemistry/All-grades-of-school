@@ -1,0 +1,146 @@
+<!-- START OF FILE pol.html (GUHERTÎ) -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="grade_selection_page_title">قۆناغێن خواندنێ - کیمیا</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page-controls">
+            <div class="language-selector-icon">
+                <button id="lang-toggle-btn" title="Guhertina Zimanî"><i class="fas fa-globe"></i></button>
+                <div id="lang-menu" class="lang-menu">
+                    <button class="btn-lang-small" data-lang="ku_ba">بادینی</button>
+                    <button class="btn-lang-small" data-lang="ku_so">سۆرانی</button>
+                    <button class="btn-lang-small" data-lang="ar">عربي</button>
+                    <button class="btn-lang-small" data-lang="en">EN</button>
+                </div>
+            </div>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <header class="profile-header" id="admin-login-trigger">
+            <div class="title-container">
+                <h1 id="profile-name" data-translate-key="profile_name">د. حسێن اکرم حسن</h1>
+            </div>
+            <h2 id="profile-title" data-translate-key="profile_title">ماموستایێ بابەتا کیمیایێ</h2>
+            <p class="username-tag" id="profile-username" data-translate-key="profile_username">@Dr.hussein.chemistry</p>
+            <button id="edit-main-btn" class="edit-button" data-translate-key="edit_this_section">گوهۆرینا ڤی بەشی</button>
+        </header>
+
+        <main class="action-links">
+            <a href="admin-panel.html" class="action-card admin-only" style="border-inline-start-color: #e63946;">
+                <i class="fas fa-user-shield" style="color: #e63946;"></i>
+                <h3>پەناڵی ئەدمین (Admin Panel)</h3>
+                <p>بەڕێوەبردنی بەکارهێنەران و چاتەکان</p>
+            </a>
+            <a href="wena.html" class="action-card admin-only" style="border-inline-start-color: #007bff;">
+                <i class="fas fa-book-medical" style="color: #007bff;"></i>
+                <h3>سیستەمێ بەلاڤکرنا پەرتووکێ</h3>
+                <p>ڕێڤەبرن و بلندکرنا پۆست و لاپەڕێن پەرتووکان</p>
+            </a>
+            <a href="grade.html?pola=10" class="action-card purple">
+                <i class="fas fa-school"></i>
+                <h3 id="grade10-title">پۆلا ١٠ (دەهێ) - بابەت و مامۆستایان</h3>
+                <p id="grade10-desc">کیمیا، فیزیا، زیندەوەر، بیرکاری، مەلزەمە و پسیار</p>
+            </a>
+            <a href="grade.html?pola=11" class="action-card blue">
+                <i class="fas fa-book-reader"></i>
+                <h3 id="grade11-title">پۆلا ١١ (یازدێ) - بابەت و مامۆستایان</h3>
+                <p id="grade11-desc">کیمیا، فیزیا، زیندەوەر، بیرکاری، مەلزەمە و پسیار</p>
+            </a>
+            <a href="grade.html?pola=12" class="action-card green">
+                <i class="fas fa-graduation-cap"></i>
+                <h3 id="grade12-title">پۆلا ١٢ (دوازدێ) - بابەت و مامۆستایان</h3>
+                <p id="grade12-desc">بابەتێن وزاری، مامۆستایان، مەلزەمە، ڤیدیۆ و پسیارێن هەڵبژارتن</p>
+            </a>
+            <a href="posts.html" class="action-card" style="border-inline-start-color: #fd7e14;">
+                <i class="fas fa-newspaper" style="color: #fd7e14;"></i>
+                <h3>پوستێن گشتی</h3>
+                <p>بابەت و ئاگەهداريێن گشتی</p>
+            </a>
+            <a href="ai-studio.html" class="action-card" style="border-inline-start-color: #5856d6;">
+                <i class="fas fa-robot" style="color: #5856d6;"></i>
+                <h3>AI Assistant</h3>
+                <p>پسیارا خو ل Ai بکە ب زمانێ تە بڤێتن و بابەتێ تە بڤێتن</p>
+            </a>
+            <a href="chat.html" class="action-card" style="border-inline-start-color: #34c759;" hidden>
+                <i class="fas fa-comments" style="color: #34c759;"></i>
+                <h3>پشتەڤانی</h3>
+                <p>ل گەل ماموستایێ خۆ باخڤە</p>
+            </a>
+        </main>
+
+        <footer class="contact-footer">
+            <h3 id="footer-title" data-translate-key="contact_footer_title">بۆ پسیار و پێشنیاران</h3>
+            <p id="footer-description" data-translate-key="contact_footer_desc">دشێی ب ڕێکا ڤان لینکان پەیوەندیێ ب من بکەی:</p>
+            <div class="social-icons" id="social-icons"></div>
+            <p class="copyright" data-translate-key="copyright_text">© 2024 | هەمی ماف پاراستینە</p>
+        </footer>
+    </div>
+    
+    <!-- Modals -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 data-translate-key="edit_modal_title">گوهۆرینا زانیاریێن لاپەڕی</h2>
+             <form id="edit-form">
+                <div class="form-group"><label data-translate-key="main_name">ناڤێ سەرەکی</label><input type="text" id="edit-profile-name"></div>
+                <div class="form-group"><label data-translate-key="secondary_title">ناڤونیشانێ دووێ</label><input type="text" id="edit-profile-title"></div>
+                <div class="form-group"><label data-translate-key="username">یوزەرنەیم</label><input type="text" id="edit-profile-username"></div><hr>
+                <div class="form-group"><label data-translate-key="grade_10_card_title">ناڤونیشانێ کارتێ پولا ١٠</label><input type="text" id="edit-grade10-title"></div>
+                <div class="form-group"><label data-translate-key="grade_10_card_desc">کورتەیا کارتێ پولا ١٠</label><input type="text" id="edit-grade10-desc"></div><hr>
+                <div class="form-group"><label data-translate-key="grade_11_card_title">ناڤونیشانێ کارتێ پولا ١١</label><input type="text" id="edit-grade11-title"></div>
+                <div class="form-group"><label data-translate-key="grade_11_card_desc">کورتەیا کارتێ پولا ١١</label><input type="text" id="edit-grade11-desc"></div><hr>
+                <div class="form-group"><label data-translate-key="grade_12_card_title">ناڤونیشانێ کارتێ پولا ١٢</label><input type="text" id="edit-grade12-title"></div>
+                <div class="form-group"><label data-translate-key="grade_12_card_desc">کورتەیا کارتێ پولا ١٢</label><input type="text" id="edit-grade12-desc"></div><hr>
+                <div class="form-group"><label data-translate-key="footer_title">ناڤونیشانێ بەشێ بنی</label><input type="text" id="edit-footer-title"></div>
+                <div class="form-group"><label data-translate-key="footer_desc">کورتەیا بەشێ بنی</label><input type="text" id="edit-footer-desc"></div>
+                <div class="form-group">
+                    <label data-translate-key="social_links">لینکێن سوسیال میدیایێ</label>
+                    <input type="url" id="social-facebook" data-translate-key="facebook_link_placeholder" placeholder="لینکێ فەیسبوکی">
+                    <input type="url" id="social-instagram" data-translate-key="instagram_link_placeholder" placeholder="لینکێ ئینستاگرامی" style="margin-top: 5px;">
+                    <input type="url" id="social-telegram" data-translate-key="telegram_link_placeholder" placeholder="لینکێ تێلێگرامی" style="margin-top: 5px;">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save" data-translate-key="save">پاشکەفتن</button>
+                    <button type="button" id="modalCloseBtn" class="btn-cancel" data-translate-key="close">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 class="modal-header" data-translate-key="admin_login_title">چوونا ژوور یا ئەدمینی</h2>
+            <form id="login-form">
+                <div class="form-group"><label for="email" data-translate-key="email">ئیمەیل</label><input type="email" id="email" required></div>
+                <div class="form-group"><label for="password" data-translate-key="password">تێپەڕەوشە</label><input type="password" id="password" required></div>
+                <p id="login-error" class="error-text"></p>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save" data-translate-key="login">چوونا ژوور</button>
+                    <button type="button" id="login-cancel-btn" class="btn-cancel" data-translate-key="close">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="translations.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="pol-script.js"></script>
+</body>
+</html>
+<!-- END OF FILE pol.html -->

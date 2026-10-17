@@ -1,0 +1,278 @@
+<!-- --- START OF FILE videos.html --- -->
+
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>وانێن ڤیدیۆیی - کیمیا</title>
+    <link rel="stylesheet" href="videos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>وانێن ڤیدیۆیی</h1>
+            
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê"><i class="fas fa-moon"></i></button>
+            <button id="player-settings-btn" class="settings-button"><i class="fas fa-cog"></i></button>
+            <button id="logout-btn" class="admin-button">دەرکەفتن</button>
+        </header>
+        <p class="description">لێرە دشێی سەیری وانێن تۆمارکری بکەی</p>
+
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="لدیڤ وانەیەکێ بگەریێ...">
+        </div>
+
+        <main id="videos-grid" class="videos-grid">
+        </main>
+
+        <footer class="contact-footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+             <a href="#" id="back-to-teachers-link" style="color: var(--secondary-text); text-decoration: none;">زڤرین بۆ هەلبژارتنا ماموستایان</a>
+        </footer>
+    </div>
+
+    <!-- Modal ya zêdekirinê -->
+    <div id="video-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">زێدەکرنا ڤیدیۆیەکا نوو</h2>
+            <form id="video-form">
+                <input type="hidden" id="video-id">
+                <div class="form-group"> <label for="video-subject">بەشێ بابەتی</label> <input type="text" id="video-subject" required> </div>
+                <div class="form-group"> <label for="video-info">مەعلوماتێن ڤیدیویێ</label> <input type="text" id="video-info" required> </div>
+                <div class="form-group"> <label for="video-link">لینکێ ڤیدیۆیا یوتیوبی</label> <input type="url" id="video-link" required> </div>
+                
+                <div id="edit-only-controls" style="display:none;">
+                    <hr style="border-color: #444; margin: 25px 0;">
+                    <div class="form-group">
+                        <label>ڕێکخستنا نڤیسینا "بەشێ بابەتی":</label>
+                        <div class="radio-group">
+                            <input type="radio" id="subject-align-right" name="subject-align" value="right"> <label for="subject-align-right">ڕاست</label>
+                            <input type="radio" id="subject-align-center" name="subject-align" value="center"> <label for="subject-align-center">ناڤەراست</label>
+                            <input type="radio" id="subject-align-left" name="subject-align" value="left"> <label for="subject-align-left">چەپ</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ڕێکخستنا نڤیسینا "مەعلوماتێن ڤیدیویێ":</label>
+                        <div class="radio-group">
+                            <input type="radio" id="info-align-right" name="info-align" value="right"> <label for="info-align-right">ڕاست</label>
+                            <input type="radio" id="info-align-center" name="info-align" value="center"> <label for="info-align-center">ناڤەراست</label>
+                            <input type="radio" id="info-align-left" name="info-align" value="left"> <label for="info-align-left">چەپ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions"> <button type="submit" class="btn-save">پاشکەفتن</button> <button type="button" class="btn-cancel">داخستن</button> </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal ya ڕێکخستنێن پلەیەرێ -->
+    <div id="player-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>ڕێکخستنێن پلەیەرێ و دیزاینێ</h2>
+
+            <details open>
+                <summary>ڕێکخستنێن گشتی</summary>
+                <div class="form-group">
+                    <label for="font-selector">فۆنتێ گشتی یێ ماڵپەری:</label>
+                    <select id="font-selector">
+                        <option value="'Noto Kufi Arabic', sans-serif">Noto Kufi Arabic</option>
+                        <option value="'Cairo', sans-serif">Cairo</option>
+                        <option value="'Tajawal', sans-serif">Tajawal</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="card-width-slider">قەبارێ بچووکترینا کارتێ (Width): <span id="card-width-value">300</span>px</label>
+                    <input type="range" id="card-width-slider" min="200" max="450" step="5" value="300">
+                </div>
+                <div class="form-group">
+                    <label for="card-title-padding-slider">قەبارێ بەشێ نڤیسینێ (Padding): <span id="card-title-padding-value">15</span>px</label>
+                    <input type="range" id="card-title-padding-slider" min="8" max="30" step="1" value="15">
+                </div>
+            </details>
+
+            <details>
+                <summary>ڕێکخستنێن دیزاینا کارتان</summary>
+                <div class="form-group">
+                    <label for="card-title-bg-color">ڕەنگێ پاشبنەمایا ناڤونیشانی:</label>
+                    <div class="color-input-group">
+                        <input type="color" id="card-title-bg-color" value="#1e1e1e">
+                        <input type="text" id="card-title-bg-text" placeholder="rgba(30, 30, 30, 1)">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="card-title-bg-opacity-slider">شەفافی (Opacity): <span id="card-title-bg-opacity-value">100</span>%</label>
+                    <input type="range" id="card-title-bg-opacity-slider" min="0" max="1" step="0.01" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="card-title-text-color">ڕەنگێ نڤیسینا ناڤونیشانی:</label>
+                     <div class="color-input-group">
+                        <input type="color" id="card-title-text-color" value="#FFFFFF">
+                        <input type="text" id="card-title-text-text" placeholder="#FFFFFF">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ڕێکخستنا نڤیسینێ:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="align-right" name="card-title-align" value="right"> <label for="align-right">ڕاست</label>
+                        <input type="radio" id="align-center" name="card-title-align" value="center" checked> <label for="align-center">ناڤەراست</label>
+                        <input type="radio" id="align-left" name="card-title-align" value="left"> <label for="align-left">چەپ</label>
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>ڕێکخستنێن گشتی یێن کۆنترۆلان</summary>
+                <div class="form-group">
+                    <label for="icon-size-slider">قەبارێ ئایکۆنان: <span id="icon-size-value">1.4</span>rem</label>
+                    <input type="range" id="icon-size-slider" min="0.8" max="2.5" step="0.1" value="1.4">
+                </div>
+                <div class="form-group">
+                    <label for="icon-spacing-slider">ناڤبەرا ئایکۆنان (Gap): <span id="icon-spacing-value">15</span>px</label>
+                    <input type="range" id="icon-spacing-slider" min="2" max="30" step="1" value="15">
+                </div>
+                <div class="form-group">
+                    <label>جهێ کۆنترۆلان:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="pos-outside" name="controls-position" value="outside" checked> <label for="pos-outside">ل ژێر ڤیدیۆیێ (دەرڤە)</label>
+                        <input type="radio" id="pos-inside" name="controls-position" value="inside"> <label for="pos-inside">ل سەر ڤیدیۆیێ (ناڤ)</label>
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>ڤەشارتنا ئایکۆنان</summary>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" data-control="[data-control-id='skip-backward']"> 10 چرکە پاش</label>
+                        <label><input type="checkbox" data-control="[data-control-id='skip-forward']"> 10 چرکە پێش</label>
+                        <label><input type="checkbox" data-control="[data-control-id='volume']"> دەنگ</label>
+                        <label><input type="checkbox" data-control="[data-control-id='cc']"> ژێرنڤیس (CC)</label>
+                        <label><input type="checkbox" data-control="[data-control-id='speed']"> خێرایی</label>
+                        <label><input type="checkbox" data-control="[data-control-id='quality']"> کوالێتی</label>
+                        <label><input type="checkbox" data-control="[data-control-id='pip']"> وێنە د وێنەیدا</label>
+                        <label><input type="checkbox" data-control="[data-control-id='fullscreen']"> تەمام شاشە</label>
+                    </div>
+                </div>
+            </details>
+            
+            <details>
+                <summary>ڕێکخستنا پێشکەفتی یا شوونان</summary>
+                 <div class="form-group" style="padding-top: 15px;">
+                    <button type="button" id="edit-layout-btn" class="btn-save" style="width: 100%; background-color: #555;">ڕێکخستنا شوونا ئایکۆنان</button>
+                    <div id="layout-edit-controls" style="display:none; margin-top: 10px;">
+                        <p style="color: var(--secondary-text); font-size: 0.9em;">ئایکۆنان بۆ بەشێن (چەپ، ناڤەراست، ڕاست) ڕابکێشە و پاشان پاشکەفتی بکە.</p>
+                        <div id="layout-editor-preview"></div>
+                        <div class="form-actions" style="justify-content: center;">
+                            <button type="button" id="save-layout-btn" class="btn-save" style="width: auto;">پاشکەفتنا ڕێکخستنێ</button>
+                            <button type="button" id="cancel-layout-btn" class="btn-cancel" style="width: auto;">پاشگەزبوونەوە</button>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <div class="form-actions">
+                <button type="button" id="save-defaults-btn" class="btn-save admin-only" style="margin-left: auto;">پاشکەفتن وەک بنەڕەت</button>
+                <button type="button" id="main-close-settings-btn" class="btn-cancel">داخستن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Playerê Vîdyoyê -->
+    <div id="video-player-modal" class="video-player-modal">
+        <div id="player-container" class="player-container">
+            <button id="close-player-btn" class="close-player-btn">&times;</button>
+            <div class="video-wrapper">
+                <div id="youtube-player"></div>
+                <div id="gesture-overlay" class="gesture-overlay">
+                     <div id="gesture-feedback" class="gesture-feedback"><i class="fas fa-volume-high"></i><span></span></div>
+                </div>
+                <div id="brightness-overlay" class="brightness-overlay"></div>
+                <button id="lock-screen-btn" class="control-btn lock-btn" title="قفلکرنا شاشێ"><i class="fas fa-lock"></i></button>
+            </div>
+
+            <div class="player-controls">
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar">
+                        <div id="progress-bar-filled" class="progress-bar-filled"></div>
+                        <div id="progress-bar-thumb" class="progress-bar-thumb"></div>
+                    </div>
+                </div>
+                <div class="time-display-container">
+                    <span id="current-time" class="time-display">00:00</span>
+                    <span class="time-separator">/</span>
+                    <span id="total-duration" class="time-display">00:00</span>
+                </div>
+                <div class="controls-main">
+                    <div class="controls-left">
+                        <div class="control-item-wrapper" data-control-id="volume">
+                            <div class="control-group volume-group">
+                                <button id="volume-btn" class="control-btn"><i class="fas fa-volume-high"></i></button>
+                                <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="controls-center">
+                         <div class="control-item-wrapper" data-control-id="skip-forward">
+                            <button id="skip-forward-btn" class="control-btn"><i class="fas fa-step-forward"></i></button>
+                        </div>
+                        <div class="control-item-wrapper" data-control-id="play-pause">
+                            <button id="play-pause-btn" class="control-btn play-pause-main"><i class="fas fa-play"></i></button>
+                        </div>
+                        <div class="control-item-wrapper" data-control-id="skip-backward">
+                            <button id="skip-backward-btn" class="control-btn"><i class="fas fa-step-backward"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="controls-right">
+                        <div class="control-item-wrapper" data-control-id="speed">
+                            <div class="control-group">
+                                <button id="speed-btn" class="control-btn" title="خێراییا لێدانێ"><i class="fas fa-gauge-high"></i></button>
+                                <div id="speed-menu" class="quality-menu"></div>
+                            </div>
+                        </div>
+                        <div class="control-item-wrapper" data-control-id="cc">
+                             <div class="control-group">
+                                <button id="cc-btn" class="control-btn" title="ژێرنڤیس"><i class="fas fa-closed-captioning"></i></button>
+                                <div id="cc-menu" class="quality-menu"></div>
+                            </div>
+                        </div>
+                        <div class="control-item-wrapper" data-control-id="quality">
+                            <div class="control-group">
+                                <button id="quality-btn" class="control-btn" title="کوالێتی"><i class="fas fa-cog"></i></button>
+                                <div id="quality-menu" class="quality-menu"></div>
+                            </div>
+                        </div>
+                        <div class="control-item-wrapper" data-control-id="pip">
+                            <button id="pip-btn" class="control-btn" title="وێنە د وێنەیدا"><i class="fa-solid fa-clone"></i></button>
+                        </div>
+                         <div class="control-item-wrapper" data-control-id="fullscreen">
+                            <button id="fullscreen-btn" class="control-btn" title="تمام شاشە"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="main-script.js"></script>
+    <script src="videos-script.js"></script>
+
+</body>
+</html>

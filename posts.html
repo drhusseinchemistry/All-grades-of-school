@@ -1,0 +1,118 @@
+<!-- START OF FILE: posts.html -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پوست</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="posts.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="container" style="max-width: 800px;">
+        <div class="page-controls">
+            <div class="language-selector-icon">
+                <button id="lang-toggle-btn" title="Guhertina Zimanî"><i class="fas fa-globe"></i></button>
+                <div id="lang-menu" class="lang-menu">
+                    <button class="btn-lang-small" data-lang="ku_ba">بادینی</button>
+                    <button class="btn-lang-small" data-lang="ku_so">سۆرانی</button>
+                    <button class="btn-lang-small" data-lang="ar">عربي</button>
+                    <button class="btn-lang-small" data-lang="en">EN</button>
+                </div>
+            </div>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <header class="profile-header" id="admin-login-trigger">
+            <div class="title-container">
+                <h1>پوستێن گشتی</h1>
+            </div>
+            <h2>لێرە دشێی بابەتێن جۆراوجۆر ببینی</h2>
+        </header>
+
+        <main id="posts-container" class="posts-container">
+            <p class="loading-text">پوست دهێنە بارکرن...</p>
+        </main>
+        
+        <footer class="contact-footer">
+             <a href="index.html" style="color: var(--secondary-text); text-decoration: none;">زڤرین بۆ هەلبژارتنا پولان</a>
+        </footer>
+    </div>
+
+    <!-- Bişkoka zêdekirina postî (Tenê bo admin) -->
+    <button id="add-post-btn" class="add-post-button admin-only" title="پوستەکێ نوو زێدەبکە">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <!-- Modala zêdekirin/guhertina postî -->
+    <div id="post-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 id="modal-title">پوستەکێ نوو زێدەبکە</h2>
+             <form id="post-form">
+                <input type="hidden" id="post-id">
+                <div class="form-group">
+                    <label for="post-title">ناڤونیشانێ بابەتی</label>
+                    <input type="text" id="post-title" placeholder="بۆ نموونە: وانەیەکا گرنگ">
+                </div>
+                <div class="form-group">
+                    <label for="post-description">وصف (کورتەیا بابەتی)</label>
+                    <textarea id="post-description" rows="4" placeholder="هەر تشتێ تە بڤێت لێرە بنڤیسە..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="post-image-upload">وێنەیەکێ هەلبژێرە (ئختیاری)</label>
+                    <input type="file" id="post-image-upload" accept="image/*">
+                    <img id="image-preview" src="#" alt="Pêşdîtina Wêneyî" class="image-preview"/>
+                </div>
+                 <div class="form-group">
+                    <label for="post-link">لینک (ئختیاری)</label>
+                    <input type="url" id="post-link" placeholder="https://example.com">
+                </div>
+                <p id="post-error" class="error-text"></p>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">بەلاڤ بکە</button>
+                    <button type="button" class="btn-cancel">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modala mezinkirina wêneyî -->
+    <div id="image-viewer-modal" class="modal-overlay image-viewer">
+        <span class="close-viewer">&times;</span>
+        <img class="modal-content-viewer" id="full-image">
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+             <h2 class="modal-header">چوونا ژوور یا ئەدمینی</h2>
+            <form id="login-form">
+                <div class="form-group"><label for="email">ئیمەیل</label><input type="email" id="email" required></div>
+                <div class="form-group"><label for="password">تێپەڕەوشە</label><input type="password" id="password" required></div>
+                <p id="login-error" class="error-text"></p>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">چوونا ژوور</button>
+                    <button type="button" id="login-cancel-btn" class="btn-cancel">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="posts-script.js"></script>
+</body>
+</html>

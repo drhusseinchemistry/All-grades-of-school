@@ -1,0 +1,54 @@
+<!-- START OF FILE: register.html -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تۆمارکرنا هژمارەکا نوو</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 450px;">
+        <div id="login-modal" class="modal-overlay" style="display: flex; position: static; background: none;">
+            <div class="modal-content" style="border-top: 5px solid var(--green-accent);">
+                <h2 class="modal-header">تۆمارکرنا هژمارەکا نوو</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="fullName">ناڤێ سێ قولی</label>
+                        <input type="text" id="fullName" placeholder="بۆ نموونە: ئەحمەد حسێن عەلی" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">رەقەم موبایل</label>
+                        <input type="tel" id="phoneNumber" placeholder="بۆ نموونە: 0750..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">ئیمەیل</label>
+                        <input type="email" id="email" placeholder="ئیمەیلێ خۆ بنڤیسە" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">تێپەڕەوشە (Password)</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">ژمارا نهێنی دوبارە بنڤیسە</label>
+                        <input type="text" id="confirmPassword" placeholder="ژمارا نهێنی ل ڤێرە بنڤیسە" required>
+                    </div>
+                    <p id="register-error" class="error-text"></p>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">تۆمار بکە</button>
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 20px; font-size: 0.9em;">
+                    هژمارا تە یا هەی؟ <a href="login.html" style="color: var(--blue-accent);">ل ڤێرە داخل ببە</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="register-script.js"></script>
+</body>
+</html>

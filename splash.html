@@ -1,0 +1,77 @@
+<!-- START OF FILE splash.html -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ب خێرهاتی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --background-color: #f0f2f5; --surface-color: #ffffff; --primary-text: #1c1e21; 
+            --secondary-text: #65676b; --blue-accent: #007BFF; --border-color: #ddd;
+        }
+        [data-theme="dark"] {
+            --background-color: #121212; --surface-color: #1e1e1e; --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0; --border-color: #383838;
+        }
+        body {
+            font-family: 'Noto Kufi Arabic', sans-serif; background-color: var(--background-color); color: var(--primary-text);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px;
+            opacity: 0; transition: opacity 0.5s ease-in-out;
+        }
+        .language-selector-container { text-align: center; max-width: 400px; width: 100%; }
+        h1 { font-size: clamp(1.5rem, 5vw, 1.8rem); margin-bottom: 30px; }
+        .language-selector-buttons { display: flex; flex-direction: column; gap: 15px; }
+        .btn-lang {
+            padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--border-color);
+            background-color: var(--surface-color); color: var(--primary-text); cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .btn-lang:hover { background-color: var(--blue-accent); color: white; transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+    <div class="language-selector-container">
+        <h1>Welcome! Choose your language:<br>
+            Bi xêr hatî! Zimanê xwe hilbijêre:<br>
+            بەخێر بێیت! زمانەکەت هەڵبژێرە:<br>
+            أهلاً بك! اختر لغتك:
+        </h1>
+        <div id="language-selector" class="language-selector-buttons">
+            <button class="btn-lang" data-lang="ku_so">کوردی سۆرانی</button>
+            <button class="btn-lang" data-lang="ku_ba">کوردی بادینی</button>
+            <button class="btn-lang" data-lang="ar">عربي</button>
+            <button class="btn-lang" data-lang="en">English</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('userLanguage');
+            if (savedLang) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const savedTheme = localStorage.getItem('userTheme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+            
+            document.body.style.opacity = '1';
+
+            const langSelector = document.getElementById('language-selector');
+            langSelector.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' && e.target.dataset.lang) {
+                    const lang = e.target.dataset.lang;
+                    localStorage.setItem('userLanguage', lang);
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+*Realtime Database
+.......
+
+{
+  "rules": {
+    // Her kes dikare datayan bixwîne
+    ".read": true,
+    // TENÊ kesên ku login kirine dikarin binivîsin
+    ".write": "auth != null"
+  }
+}
+
+
+*frestore databae
+........
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Fonksiyoneke alîkar ji bo piştrastkirina ku bikarhêner admin e
+    function isAdmin() {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+    
+    // Rêgezên ji bo koleksiyona 'users'
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow update: if request.auth.uid == userId || isAdmin();
+      allow create, delete: if isAdmin();
+    }
+
+    // Rêgezên ji bo koleksiyona 'chats'
+    match /chats/{userId} {
+      allow create: if request.auth.uid == userId;
+      allow read, update: if request.auth.uid == userId || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Rêgezên ji bo hemî koleksiyonên din ên sereke (mîna posts, pageContent, pola10_cards, hwd.)
+    match /{collection}/{docId} {
+      allow read: if request.auth != null; // Hemî bikarhênerên têketî dikarin bixwînin
+      allow write: if isAdmin();             // TENÊ ADMIN dikarin biguherînin
+
+      // Rêgeza navxweyî ji bo 'chapters' di nav 'polaX_cards' de
+      match /chapters/{chapterId} {
+        allow read: if request.auth != null;
+        allow write: if isAdmin();
+
+        // Rêgeza navxweyî ji bo 'questions' di nav 'chapters' de
+        match /questions/{questionId} {
+          allow read: if request.auth != null;
+          allow write: if isAdmin();
+        }
+      }
+    }
+  }
+}
+
+
+*storage
+......
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Rê bide her kesî (tevî bikarhênerên netêketî) ku hemî pelan bixwîne.
+    // Ev pêwîst e da ku sepan bikaribe wêneyan ji hemî bikarhêneran re nîşan bide.
+    match /{allPaths=**} {
+      allow read;
+      
+      // Tenê rê bide bikarhênerên ku têketine (authenticated) ku pelan binivîsin (zêdekirin, guhertin, jêbirin).
+      // Ji ber ku tenê admin dikarin bigihîjin rûpelên barkirinê, ev rêgez ewle ye.
+      allow write: if request.auth != null;
+    }
+  }
+}

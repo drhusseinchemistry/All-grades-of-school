@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چوونا ژوور</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 450px;">
+        <div id="login-modal" class="modal-overlay" style="display: flex; position: static; background: none;">
+            <div class="modal-content">
+                <h2 class="modal-header">چوونا ژوور</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">ئیمەیل</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">تێپەڕەوشە</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <p id="login-error" class="error-text"></p>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">داخل ببە</button>
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 20px; font-size: 0.9em;">
+                    هژمارا تە نینە؟ <a href="register.html" style="color: var(--blue-accent);">ئێکێ نوو چێکە</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="login-script.js"></script>
+</body>
+</html>

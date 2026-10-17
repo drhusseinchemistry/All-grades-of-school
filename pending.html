@@ -1,0 +1,65 @@
+<!-- START OF FILE: pending.html (GUHERTÎ) -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چاڤەرێیا چالاککرنێ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        .contact-buttons { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 25px; }
+        @media (min-width: 400px) {
+            .contact-buttons { grid-template-columns: 1fr 1fr; }
+            .contact-buttons .sms { grid-column: span 2; }
+        }
+        .contact-btn {
+            padding: 12px; font-size: 1.1em; border-radius: 8px; border: none;
+            color: white; text-decoration: none; display: flex; align-items: center;
+            justify-content: center; gap: 10px; transition: opacity 0.3s;
+        }
+        .contact-btn:hover { opacity: 0.9; }
+        .whatsapp { background-color: #25D366; }
+        .telegram { background-color: #0088cc; }
+        .sms { background-color: #f0ad4e; }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 500px; text-align: center;">
+        <i class="fas fa-clock" style="font-size: 4rem; color: var(--blue-accent); margin-bottom: 20px;"></i>
+        <h1>هژمارا تە هاتیە تۆمارکرن</h1>
+        <p style="color: var(--secondary-text); font-size: 1.1em; line-height: 1.6;">
+            لێ هێشتا اشتراکێ تە نەهاتیە چالاککرن.
+            <br><br>
+            بۆ چالاککرنێ، داخازیەکێ ب ڕێکا ئێک ژ ڤان رێکان بۆ مە فرێکە:
+        </p>
+        
+        <div class="contact-buttons">
+            <a href="#" id="whatsapp-btn" class="contact-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="#" id="telegram-btn" class="contact-btn telegram"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="#" id="sms-btn" class="contact-btn sms"><i class="fas fa-comment-sms"></i> SMS</a>
+        </div>
+        
+        <div style="background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-top: 25px; text-align: right;">
+            <p style="font-size: 0.9em; line-height: 1.7; color: var(--primary-text); margin: 0;">
+                <strong style="color: var(--blue-accent);">تێبینیێن گرنگ:</strong><br>
+                - ئشتیراک بۆ ماوێ سالەکێ بتنێ <strong>5000</strong> دینارێ عێراقی یە.<br>
+                - دشێی پارەی ب ڕێکا (<strong>FastPay</strong>) یان (<strong>FIB</strong>) فرێکەی بۆ ژمارا (<strong dir="ltr">+964 750 199 0353</strong>).<br>
+                - پشتی پارەدانێ، وێنەکێ وەسلا خۆ دگەل داخازیا چالاککرنێ ب ڕێکا ئێک ژ ڕێکێن ل سەر فرێکە.<br>
+                - اشتیراک تنێ یا تایبەتە ب بەرنامەیی (واتە دیتنا هەمی وانێن ڤیدیۆیی و مەلزەمە و پسیارێن هەلبژارتن بەلاشن).<br>
+                - مافێ مەلزەمێ و هەلبژارتن و ڤیدیوو و بەرنامەکە پاراستیە.
+            </p>
+        </div>
+        
+        <button id="logout-btn" style="background: transparent; border: 1px solid var(--secondary-text); color: var(--secondary-text); margin-top: 25px;">
+            چوونا دەر
+        </button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="pending-script.js"></script>
+</body>
+</html>

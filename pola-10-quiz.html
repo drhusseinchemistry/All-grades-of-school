@@ -1,0 +1,71 @@
+<!-- START OF FILE pola-10-quiz.html -->
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="quiz_page_title_10">پسیارێن هەلبژارتن - کیمیا پولا 10</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body data-grade="10">
+    <div class="container">
+        <div class="page-controls">
+            <div class="language-selector-icon">
+                <button id="lang-toggle-btn" title="Guhertina Zimanî"><i class="fas fa-globe"></i></button>
+                <div id="lang-menu" class="lang-menu">
+                    <button class="btn-lang-small" data-lang="ku_ba">بادینی</button>
+                    <button class="btn-lang-small" data-lang="ku_so">سۆرانی</button>
+                    <button class="btn-lang-small" data-lang="ar">عربي</button>
+                    <button class="btn-lang-small" data-lang="en">EN</button>
+                </div>
+            </div>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <header class="profile-header" id="admin-login-trigger">
+            <div class="title-container">
+                <h1 data-translate-key="quiz_page_title_10">پسیارێن هەلبژارتن - پولا دەهێ</h1>
+            </div>
+            <h2 data-translate-key="quiz_intro">بەندەکێ هەلبژێرە و دەست ب تاقیکرنێ بکە</h2>
+        </header>
+
+        <main class="action-links" id="links-container"></main>
+        
+        <footer class="contact-footer">
+             <a href="pola-10.html" style="color: var(--secondary-text); text-decoration: none;" data-translate-key="back_to_grade_10">زڤرین بۆ پولا دەهێ</a>
+        </footer>
+    </div>
+    <!-- Modal -->
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 data-translate-key="add_new_quiz_section">زێدەکرنا بەشێ پسیاران</h2>
+            <form id="add-form">
+                <div class="form-group"><label for="card-title">ناڤونیشان</label><input type="text" id="card-title" required></div>
+                <div class="form-group"><label for="card-desc">کورتە</label><input type="text" id="card-desc" required></div>
+                <div class="form-group"><label for="card-color">ڕەنگ</label><select id="card-color"><option value="blue">شین</option><option value="purple">بنەفشی</option><option value="green">کەسک</option></select></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save" data-translate-key="save">پاشکەفتن</button>
+                    <button type="button" id="modalCloseBtn" class="btn-cancel" data-translate-key="close">داخستن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+<!-- END OF FILE pola-10-quiz.html -->

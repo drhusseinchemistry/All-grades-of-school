@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سابورە - Whiteboard</title>
+    <link rel="stylesheet" href="board.css">
+</head>
+<body>
+    <!-- Bişkoka ji bo vekirin û girtina amûran -->
+    <div id="toggle-toolbar-btn" title="ئامرازان ڤەکە">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4c-.83 0-1.5-.67-1.5-1.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    </div>
+
+    <!-- Lîsteya Amûran -->
+    <div class="toolbar">
+        <div class="tool-section">
+            <div class="tool-group">
+                <label>ئامراز:</label>
+                <div class="icon-buttons">
+                    <button class="tool-btn" data-tool="select" title="هەڵبژاردن"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#FFFFFF"><path d="M14.5 1.5L23.5 15.5L18.5 17.5L9.5 3.5Z M4.5 5.5L10.5 21.5L8.5 22.5L2.5 6.5Z"/></svg></button>
+                    
+                    <!-- Amûrên wênesaziyê -->
+                    <button class="tool-btn active" data-tool="pen" title="قەلەم"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+                    <!-- Qelema Resas (NÛ) -->
+                    <button class="tool-btn" data-tool="pencil" title="قەڵەمی ڕساس"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/></svg></button>
+                    <button class="tool-btn" data-tool="brush" title="فرچە"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34c-.39-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z"/></svg></button>
+                    <button class="tool-btn" data-tool="marker" title="قەلەمی مارکەر"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.37 3.29a.9959.9959 0 0 0-1.41 0L3.29 16.96a.9959.9959 0 0 0 0 1.41L5.64 20.7a.9959.9959 0 0 0 1.41 0L20.7 7.04a.9959.9959 0 0 0 0-1.41L18.37 3.29zM6.35 18.29l-1.64-1.64L15.25 6.1l1.64 1.64L6.35 18.29z"/></svg></button>
+                    <button class="tool-btn" data-tool="eraser" title="ژێبرن (مساحە)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13.5l-6.5-6.5-1.42 1.42L17.58 15H5v-2h12.58l-3.5-3.5 1.42-1.42L21.42 12l-6.42 6.42-1.42-1.42L17.58 13H5v2h14v-1.5z" opacity=".3"/><path d="M22 11.42L20.58 10l-4.5 4.5 1.42 1.42L22 11.42zM5 13h12.58l-3.5-3.5 1.42-1.42L21.42 12l-6.42 6.42-1.42-1.42L17.58 13H5z"/></svg></button>
+                </div>
+            </div>
+             <div class="tool-group">
+                <label>شێوە:</label>
+                <div class="icon-buttons">
+                    <button class="tool-btn" data-tool="rectangle" title="لاکێشە"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2 4v16h20V4H2zm18 14H4V6h16v12z"/></svg></button>
+                    <button class="tool-btn" data-tool="circle" title="بازنە"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></button>
+                    <button class="tool-btn" data-tool="star" title="ستێر"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/></svg></button>
+                </div>
+            </div>
+            <div class="tool-group">
+                 <label>نڤیسین و وێنە:</label>
+                 <div class="icon-buttons">
+                    <button class="tool-btn" data-tool="image" title="ئینانا وێنەی"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></button>
+                    <button class="tool-btn" data-tool="text" title="زێدەکرنا نڤیسینێ"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"/></svg></button>
+                 </div>
+            </div>
+            <div class="tool-group">
+                <label>کردارەکان:</label>
+                <div class="icon-buttons">
+                    <button class="tool-btn" id="lockAllBtn" title="هەمووی قفل بکە/بکەوە"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></button>
+                </div>
+            </div>
+            <div class="tool-group">
+                <label for="penColorPicker">ڕەنگێ قەلەمی:</label>
+                <input type="color" id="penColorPicker" value="#000000" title="هەڵبژاردنی ڕەنگ">
+            </div>
+            <div class="tool-group">
+                <label for="boardColorPicker">ڕەنگێ سابورێ:</label>
+                <input type="color" id="boardColorPicker" value="#ffffff" title="ڕەنگێ پاشبنەمایێ بگۆڕە">
+            </div>
+            <div class="tool-group">
+                <label for="penSizeSlider">قەبارێ قەلەمی:</label>
+                <div class="slider-container">
+                    <input type="range" id="penSizeSlider" min="1" max="100" value="5">
+                    <span id="penSizeValue">5</span>
+                </div>
+            </div>
+            <div id="selectedObjectToolbar" class="tool-group" style="display: none;">
+                <label for="selectedObjectColorPicker">ڕەنگی تەنە هەڵبژێردراوەکە:</label>
+                <input type="color" id="selectedObjectColorPicker" title="گۆڕینی ڕەنگی تەنە">
+                <div id="textTools" style="display: none;">
+                    <label for="fontFamilySelector">جۆرێ فونتی:</label>
+                    <select id="fontFamilySelector">
+                        <option value="Arial">Arial</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="'Noto Naskh Arabic'">Noto Naskh (Kurdî)</option>
+                    </select>
+                    <label for="fontSizeInput">قەبارێ فونتی:</label>
+                    <input type="number" id="fontSizeInput" min="1" value="25" class="text-input">
+                    <button id="uploadFontBtn" class="action-btn-small">فونتا نوی باربکە</button>
+                </div>
+            </div>
+            <div id="lockedObjectsPanel" class="tool-group">
+                <label>Tiştên Girtî:</label>
+                <div id="lockedObjectsList"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <div class="icon-buttons" style="justify-content: center;">
+                 <button id="undoBtn" class="tool-btn" title="پاشڤە زڤرین"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></button>
+                 <button id="redoBtn" class="tool-btn" title="پێشڤە برن"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.96 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg></button>
+            </div>
+            <button id="historyBtn" class="action-btn history">پێشینە</button>
+            <button id="saveBtn" class="action-btn save">خەزنکرنا وێنەی</button>
+            <button id="newPageBtn" class="action-btn new-page">لاپەرەکا نوی</button>
+            <button id="clearBtn" class="action-btn clear">هەمیێ پاککە</button>
+        </div>
+    </div>
+
+    <canvas id="drawing-board"></canvas>
+    <input type="file" id="imageLoader" accept="image/*" style="display: none;"/>
+    <input type="file" id="fontLoader" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
+
+    <div id="historyPanel">
+        <div id="historyContent"></div>
+        <button id="closeHistoryBtn">داخستن</button>
+    </div>
+
+    <button id="open-calculator-btn" title="Hesabker">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4-4H5V5h14v2z"/></svg>
+    </button>
+
+    <div id="calculator-overlay">
+        <div class="calculator-frame-container">
+            <iframe id="calculator-iframe" src="about:blank" frameborder="0"></iframe>
+            <button id="close-calculator-btn" title="داخستن">&times;</button>
+        </div>
+    </div>
+
+    <script src="board.js"></script>
+</body>
+</html>

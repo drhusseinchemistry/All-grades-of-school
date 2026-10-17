@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماموستای هەلبژێرە</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+         <div class="page-controls">
+            <div class="language-selector-icon">
+                <button id="lang-toggle-btn" title="Guhertina Zimanî"><i class="fas fa-globe"></i></button>
+                <div id="lang-menu" class="lang-menu">
+                    <button class="btn-lang-small" data-lang="ku_ba">بادینی</button>
+                    <button class="btn-lang-small" data-lang="ku_so">سۆرانی</button>
+                    <button class="btn-lang-small" data-lang="ar">عربي</button>
+                    <button class="btn-lang-small" data-lang="en">EN</button>
+                </div>
+            </div>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+            <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <header class="profile-header">
+            <h1 data-translate-key="video_lessons">وانێن ڤیدیۆیی</h1>
+            <h2 data-translate-key="choose_teacher">ماموستایێ خۆ هەلبژێرە</h2>
+            <p style="color:var(--secondary-text); font-size:0.85rem; margin-top:5px;">
+                <i class="fas fa-sort-amount-down"></i> ڕێزبەندی ل دوویف زۆرترین تەماشەکرنا قوتابیان
+            </p>
+        </header>
+
+        <main class="action-links" id="teachers-grid">
+            <!-- Dynamically populated and sorted by views -->
+        </main>
+
+        <footer class="contact-footer">
+             <a href="#" id="back-link" class="back-link" style="font-size: 1.1em; color: var(--secondary-text); text-decoration: none;">زڤرین بۆ پولان</a>
+        </footer>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="educational-data.js"></script>
+    <script src="translations.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pola = urlParams.get('pola') || '12';
+            const dataStore = window.EducationalData;
+            const grid = document.getElementById('teachers-grid');
+
+            function renderTeachers() {
+                const currentLang = dataStore.getActiveLanguage();
+                const teachers = dataStore ? dataStore.getTeachersForGrade(pola, currentLang) : [];
+                
+                if (teachers.length === 0) {
+                    const langName = dataStore.getLanguageLabel(currentLang);
+                    grid.innerHTML = `<p style="color:var(--secondary-text); text-align:center; padding:30px;">هیچ مامۆستایەک بە زمانی (${langName}) بۆ ئەم پۆلە نییە.</p>`;
+                } else {
+                    grid.innerHTML = teachers.map((t, idx) => {
+                        const isRank1 = idx === 0;
+                        const colorClass = idx % 2 === 0 ? 'blue' : 'purple';
+                        return `
+                            <a href="grade.html?pola=${pola}" class="action-card ${colorClass}" style="position:relative;">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <div style="flex:1;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                                        <h3>${t.name}</h3>
+                                        ${isRank1 ? '<span style="background:#ff9800; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:10px;"><i class="fas fa-fire"></i> پلە ١</span>' : ''}
+                                    </div>
+                                    <p>${t.subject || 'کیمیا'} | <i class="fas fa-eye"></i> ${(t.viewsCount || 0).toLocaleString()} بینین (${dataStore.getLanguageLabel(currentLang)})</p>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                }
+            }
+
+            renderTeachers();
+            window.addEventListener('languageChanged', renderTeachers);
+            
+            const backLink = document.getElementById('back-link');
+            backLink.href = `grade.html?pola=${pola}`;
+            backLink.setAttribute('data-translate-key', 'back_to_grade_selection');
+            
+            const savedLang = localStorage.getItem('userLanguage');
+            if (savedLang && translations[savedLang] && translations[savedLang]['back_to_grade_selection']) {
+                backLink.textContent = translations[savedLang]['back_to_grade_selection'];
+            }
+        });
+    </script>
+</body>
+</html>

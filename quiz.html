@@ -1,0 +1,81 @@
+<!-- === START OF FILE quiz.html === -->
+
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تاقیکرنا کیمیایێ</title>
+    <link rel="stylesheet" href="quiz-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="page-controls-corner">
+             <button id="theme-toggle-btn" class="theme-toggle-button" title="Guhertina Temayê">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="auth-action-btn" class="theme-toggle-button" title="چوونا ژوور / دەرکەفتن">
+                <i class="fas fa-right-to-bracket"></i>
+            </button>
+        </div>
+
+        <div id="loading-screen" class="screen active"><h1><i class="fas fa-spinner fa-spin"></i> چاوەڕوانی...</h1></div>
+        
+        <div id="start-screen" class="screen">
+            <h1 id="quiz-title"><i class="fas fa-flask-vial"></i> تاقیکرنا کیمیایێ</h1>
+            <p class="description">ناڤێ دروست یێ ئاڕاستەیان هەلبژێرە</p>
+            <button id="start-btn" class="btn">دەستپێک</button>
+            <button id="manage-btn" class="btn secondary-btn admin-only">بەڕێوەبرنا پسیارێن ڤی بەشی</button>
+            <a href="#" id="back-to-chapters-btn" class="btn secondary-btn" style="text-decoration: none; display: block; box-sizing: border-box;">زڤرین بۆ هەلبژارتنا تاقیکرنان</a>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header"><span id="question-number"></span><span id="score"><i class="fas fa-star"></i> 0</span></div>
+            <h2 id="question-text"></h2>
+            <div id="options-container" class="options-container"></div>
+            <button id="next-btn" class="btn hide">پسیارا دی</button>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <h1>تاقیکرن ب دوماهیک هات!</h1>
+            <p class="final-score-text">ئەنجامێ تە:</p><p id="final-score" class="final-score-value"></p>
+            <p id="feedback-text" class="feedback"></p><button id="restart-btn" class="btn">جارەکا دی</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="manage-modal" class="modal-overlay"> <div class="modal-content"> <h1 class="modal-header">بەڕێوەبرنا پسیاران</h1> <div id="question-list" class="question-list"></div> <div class="form-actions" style="flex-direction: column; gap: 15px;"> <button id="add-new-question-btn" class="btn">پسیارەکا نوو (ئێک ب ئێک)</button> <button id="bulk-paste-btn" class="btn" style="background-color: #f0ad4e;">بارکرنا پسیاران ب پەیستکرنێ</button> <button id="close-manage-modal-btn" class="btn secondary-btn">داخستن</button> </div> </div> </div>
+    
+    <div id="bulk-paste-modal" class="modal-overlay"> 
+        <div class="modal-content"> 
+            <h2 class="modal-header">بارکرنا پسیاران ب کۆم</h2> 
+            <p class="description" style="font-size: 0.9em; text-align: right; line-height: 1.6;">
+                پسیارێن خۆ لدیڤ ڤی شێوازی ل خوارێ بنڤیسە:<br>
+                - ب <strong>تیرێ (➳)</strong> پسیاران ژێک جودا بکە.<br>
+                - ب <strong>ستێرێ (✹)</strong> پسیار، هەلبژارتن و بەرسڤێ ژێک جودا بکە.<br>
+                - هەلبژارتنان ب <strong>بازنێ (〇)</strong> ژێکڤەکە.<br>
+                - بەرسڤێ ب پەیڤا <strong>"بەرسڤ"</strong> دەستپێبکە.<br>
+            </p> 
+            <textarea id="paste-area" placeholder="میناک:&#10;کیژ ژڤان لقێ کیمیایێ یە ✹ کیمیا ئەندامی 〇 کیمیا نائەندامی 〇 کیمیا شیکاری 〇 هەمی هەون ✹ بەرسڤ هەمی هەون&#10;➳&#10;پایتەختێ عیراقێ کیژکە ✹ بەغدا 〇 هەولێر 〇 بەسرا 〇 موسل ✹ بەرسڤ بەغدا"></textarea> 
+            <pre id="upload-log" class="upload-log"></pre> 
+            <div class="form-actions"> 
+                <button id="upload-pasted-btn" class="btn" style="background-color: var(--green-accent);">بارکرن</button> 
+                <button type="button" id="paste-cancel-btn" class="btn secondary-btn">داخستن</button> 
+            </div> 
+        </div> 
+    </div>
+
+    <div id="question-modal" class="modal-overlay"> <div class="modal-content"><h2 id="modal-title" class="modal-header"></h2><form id="question-form"><input type="hidden" id="question-id"><div class="form-group"><label>دەقێ پسیارێ</label><input type="text" id="modal-question-text" required></div><div class="form-group"><label>بەرسڤ</label><div class="options-edit-grid"><input type="radio" name="correct-answer" value="0" required><input type="text" class="option-input" p="1"><input type="radio" name="correct-answer" value="1"><input type="text" class="option-input" p="2"><input type="radio" name="correct-answer" value="2"><input type="text" class="option-input" p="3"><input type="radio" name="correct-answer" value="3"><input type="text" class="option-input" p="4"></div></div><div class="form-group"><label>ڕەنگ</label><select id="modal-question-color"><option value="accent">شین</option><option value="purple">بنەفشی</option><option value="green">کەسک</option><option value="wrong">سۆر</option></select></div><div class="form-actions"><button type="submit" class="btn">پاشکەفتن</button><button type="button" id="modal-cancel-btn" class="btn secondary-btn">ژکارخستن</button></div></form></div> </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="auth-guard.js"></script>
+    <script src="main-script.js"></script>
+    <script src="quiz-script.js"></script>
+</body>
+</html>
+<!-- === END OF FILE quiz.html === -->
